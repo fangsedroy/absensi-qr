@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantau Absensi Siswa (Orang Tua)</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f6f9; }
+        .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #hasil { margin-top: 20px; font-weight: bold; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>PANTUAN ABSENSI SISWA</h2>
+    <p>Masukkan NIS anak Anda untuk mengecek kehadiran hari ini:</p>
+    <input type="number" id="nisInput" placeholder="Contoh: 2026001">
+    <br>
+    <button onclick="cekAbsen()">Cek Kehadiran</button>
+    <div id="hasil"></div>
+</div>
+
+<script>
+    // GANTI dengan URL Google Apps Script Anda yang berakhiran /exec
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybSjJW_ZwFtANaa5s66ZX4hpKAdNWx8k59IIkb2gKofRwi9J2LY58kQCkEQMNY6ubynA/exec"; 
+
+    function cekAbsen() {
+        var nis = document.getElementById('nisInput').value;
+        if(!nis) { alert("Masukkan NIS terlebih dahulu!"); return; }
+        
+        document.getElementById('hasil').innerText = "Mencari data...";
+        
+        fetch(`${WEB_APP_URL}?nis=${nis}`)
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "HADIR") {
+                document.getElementById('hasil').innerHTML = `<span style="color:green;">✅ Anak Anda Sudah Masuk Sekolah</span><br><small>Jam Scan: ${data.jam}</small>`;
+            } else {
+                document.getElementById('hasil').innerHTML = `<span style="color:red;">❌ ${data.status}</span>`;
+            }
+        })
+        .catch(error => {
+            document.getElementById('hasil').innerText = "Gagal memuat data. Coba lagi.";
+        });
+    }
+</script>
+</body>
+</html>
