@@ -7,8 +7,8 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f6f9; }
         .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; text-transform: uppercase; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         #hasil { margin-top: 20px; font-weight: bold; font-size: 1.2em; }
     </style>
 </head>
@@ -16,8 +16,9 @@
 
 <div class="container">
     <h2>PANTUAN ABSENSI SISWA</h2>
-    <p>Masukkan NIS anak Anda untuk mengecek kehadiran hari ini:</p>
-    <input type="number" id="nisInput" placeholder="Contoh: 2026001">
+    <p>Masukkan Nama Lengkap anak Anda untuk mengecek kehadiran hari ini:</p>
+    <!-- Input diubah menjadi teks biasa -->
+    <input type="text" id="namaInput" placeholder="Contoh: AHMED FAUZI">
     <br>
     <button onclick="cekAbsen()">Cek Kehadiran</button>
     <div id="hasil"></div>
@@ -28,18 +29,22 @@
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybSjJW_ZwFtANaa5s66ZX4hpKAdNWx8k59IIkb2gKofRwi9J2LY58kQCkEQMNY6ubynA/exec"; 
 
     function cekAbsen() {
-        var nis = document.getElementById('nisInput').value;
-        if(!nis) { alert("Masukkan NIS terlebih dahulu!"); return; }
+        var namaSiswa = document.getElementById('namaInput').value;
+        if(!namaSiswa) { alert("Masukkan Nama Lengkap terlebih dahulu!"); return; }
         
         document.getElementById('hasil').innerText = "Mencari data...";
         
-        fetch(`${WEB_APP_URL}?nis=${nis}`)
+        // Parameter pencarian diubah menjadi ?nama=...
+        fetch(`${WEB_APP_URL}?nama=${encodeURIComponent(namaSiswa)}`)
         .then(response => response.json())
         .then(data => {
             if(data.status === "HADIR") {
-                document.getElementById('hasil').innerHTML = `<span style="color:green;">✅ Anak Anda Sudah Masuk Sekolah</span><br><small>Jam Scan: ${data.jam}</small>`;
+                document.getElementById('hasil').innerHTML = `
+                    <span style="color:green;">✅ Anak Anda (${data.nama}) Sudah Masuk Sekolah</span><br>
+                    <small>Jam Scan: ${data.jam}</small>
+                `;
             } else {
-                document.getElementById('hasil').innerHTML = `<span style="color:red;">❌ ${data.status}</span>`;
+                document.getElementById('hasil').innerHTML = `<span style="color:red;">❌ Siswa belum terdeteksi masuk hari ini.</span>`;
             }
         })
         .catch(error => {
