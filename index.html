@@ -12,23 +12,28 @@
         h2 { color: #2d3748; font-size: 24px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         .subtitle { color: #718096; font-size: 14px; margin-bottom: 25px; }
         
+        /* Box Kamera */
         #reader { width: 100%; border-radius: 16px; overflow: hidden; border: none !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         
-        /* SEMBUNYIKAN SELEKSI KAMERA BAWAAN YANG SERING TERKUNCI */
-        #reader__dashboard_section_csr { display: none !important; }
+        /* Dashboard Kontrol Bawaan Library */
+        #reader__dashboard { background: #f8fafc !important; padding: 25px 15px !important; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border-top: 1px solid #e2e8f0; }
         
-        #reader__dashboard { background: #f8fafc !important; padding: 20px 15px !important; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border-top: 1px solid #e2e8f0; }
-
-        /* GAYA TOMBOL UTAMA */
-        button, #reader__dashboard button { background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; color: white !important; border: none !important; padding: 12px 28px !important; font-size: 14px !important; font-weight: 600 !important; border-radius: 12px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 12px rgba(76, 81, 191, 0.3) !important; margin: 5px auto !important; display: inline-block; }
-        button:hover, #reader__dashboard button:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(76, 81, 191, 0.4); }
+        /* Merapikan Susunan Tombol & Dropdown Supaya Tidak Menempel */
+        #reader__dashboard_section_csr { display: block !important; margin-bottom: 20px !important; font-weight: 600; color: #4a5568; font-size: 14px; }
         
-        /* Sembunyikan tombol stop bawaan karena sudah dicover tombol kustom kita jika mau */
-        #reader__dashboard_section_csr + div button { background: linear-gradient(135deg, #e53e3e 0%, #e53e3e 100%) !important; box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3) !important; }
+        /* Mempercantik Dropdown Kamera */
+        #reader__dashboard_section_csr select { padding: 12px 15px !important; border-radius: 12px !important; border: 2px solid #cbd5e0 !important; background-color: white !important; font-size: 14px !important; color: #4a5568 !important; outline: none !important; width: 100% !important; max-width: 300px !important; display: block !important; margin: 10px auto 0 auto !important; text-align-last: center; font-weight: 600; }
+        #reader__dashboard_section_csr select:focus { border-color: #667eea !important; }
 
-        /* WADAH TOMBOL KUSTOM PINDAH KAMERA */
-        .custom-controls { margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .btn-switch { background: linear-gradient(135deg, #319795 0%, #4fd1c5 100%) !important; box-shadow: 0 4px 12px rgba(49, 151, 149, 0.3) !important; }
+        /* Merapikan Semua Tombol Bawaan (Start, Stop, Pilih File) */
+        #reader__dashboard button, #reader__dashboard_section_swap link, #reader__dashboard_section_swap a { background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; color: white !important; border: none !important; padding: 12px 24px !important; font-size: 14px !important; font-weight: 600 !important; border-radius: 12px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 12px rgba(76, 81, 191, 0.3) !important; margin: 8px auto !important; display: inline-block !important; text-decoration: none !important; }
+        #reader__dashboard button:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 18px rgba(76, 81, 191, 0.4) !important; }
+        
+        /* Khusus Tombol Stop Kamera kita beri warna merah tegas */
+        #reader__dashboard button[id*="stop"] { background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important; box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3) !important; }
+        
+        /* Merapikan Link Pindah Ke Unggah Berkas */
+        #reader__dashboard_section_swap { margin-top: 15px !important; display: block !important; }
 
         #status { margin-top: 25px; font-size: 16px; font-weight: 600; min-height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px; }
         .alert { padding: 12px 20px; border-radius: 12px; width: 100%; animation: slideUp 0.4s ease; }
@@ -42,19 +47,15 @@
 
 <div class="container">
     <h2>Presensi QR Code</h2>
-    <p class="subtitle">Arahkan kartu QR siswa ke area kamera scanner</p>
+    <p class="subtitle">Arahkan kartu QR siswa ke kamera atau unggah berkas gambar</p>
     
     <div id="reader"></div>
-    
-    <div class="custom-controls">
-        <button id="btnGantiKamera" class="btn-switch" onclick="gantiKameraOtomatis()">🔄 Ganti Kamera Belakang / Depan</button>
-    </div>
 
     <div id="status"><div class="alert alert-loading">⏳ Mengaktifkan Kamera...</div></div>
 </div>
 
 <script>
-    // ⚠️ GANTI DENGAN URL APPS SCRIPT ANDA YANG BERAKHIRAN /exec
+    // ⚠️ MASUKKAN URL APPS SCRIPT EXEC ANDA DI SINI
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzfM2U27ZwceKOJUrRC3eEip_4gu7pgv0o9ASkpJn_n0aj5z841a3P8ZCnqzd4hbNSdTA/exec"; 
 
     function onScanSuccess(decodedText, decodedResult) {
@@ -90,42 +91,6 @@
 
     let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-
-    // FUNGSI JIRAL SAKTI: Memaksa pemindahan kamera tanpa perlu pencet stop manual
-    function gantiKameraOtomatis() {
-        // 1. Cari dropdown asli bawaan sistem yang sembunyi
-        const selectElement = document.querySelector("#reader__dashboard_section_csr select");
-        const stopButton = document.querySelector("#reader__dashboard_section_csr + div button");
-        
-        if (!selectElement || selectElement.options.length <= 1) {
-            alert("Sistem tidak mendeteksi adanya kamera tambahan di HP Anda.");
-            return;
-        }
-
-        // 2. Klik stop secara otomatis di sistem belakang layar
-        if (stopButton && stopButton.innerText.toLowerCase().includes("stop")) {
-            stopButton.click();
-        }
-
-        // 3. Beri jeda sangat singkat agar sistem melepaskan kunci kamera, lalu ganti indeks kamera berikutnya
-        setTimeout(() => {
-            let currentIndex = selectElement.selectedIndex;
-            let nextIndex = (currentIndex + 1) % selectElement.options.length;
-            selectElement.selectedIndex = nextIndex;
-            
-            // 4. Picu event perubahan data pada dropdown agar library membaca pilihan baru
-            const event = new Event('change');
-            selectElement.dispatchEvent(event);
-
-            // 5. Jalankan kembali kameranya secara otomatis
-            setTimeout(() => {
-                const startButton = document.querySelector("#reader__dashboard button");
-                if (startButton && startButton.innerText.toLowerCase().includes("start")) {
-                    startButton.click();
-                }
-            }, 300);
-        }, 300);
-    }
 </script>
 
 </body>
