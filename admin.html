@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Absen Manual Guru</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        }
+        .container { 
+            background: #ffffff; 
+            max-width: 450px; 
+            width: 100%; 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+            text-align: center; 
+        }
+        h2 { color: #0f172a; font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+        .subtitle { color: #64748b; font-size: 14px; margin-bottom: 30px; line-height: 1.5; }
+        .form-group { text-align: left; margin-bottom: 25px; }
+        label { display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; }
+        input[type="text"] {
+            width: 100%; padding: 16px 18px; border-radius: 14px; border: 2px solid #e2e8f0;
+            font-size: 16px; font-weight: 500; color: #1e293b; outline: none; transition: all 0.3s;
+            background-color: #f8fafc;
+        }
+        input[type="text"]:focus { border-color: #6366f1; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); }
+        .btn-submit {
+            width: 100%; background: #4f46e5; color: white; border: none; padding: 16px;
+            font-size: 16px; font-weight: 700; border-radius: 14px; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+        .btn-submit:hover { background: #4338ca; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35); }
+        #statusBox { margin-top: 25px; }
+        .alert { padding: 15px; border-radius: 14px; font-size: 14px; font-weight: 600; text-align: center; line-height: 1.5; }
+        .alert-loading { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+        .alert-success { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        .alert-error { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>✍️ Absen Manual Guru</h2>
+    <p class="subtitle">Ketik nama panggilan atau nama lengkap siswa yang lupa membawa kartu QR Code.</p>
+    
+    <div class="form-group">
+        <label for="inputNama">Nama Siswa</label>
+        <input type="text" id="inputNama" placeholder="Contoh: Budi atau aa" autocomplete="off">
+    </div>
+    
+    <button class="btn-submit" onclick="absenManualNama()">Konfirmasi Hadir</button>
+
+    <div id="statusBox"></div>
+</div>
+
+<script>
+    // ⚠️ PASTEKAN URL WEB APP EXEC DARI GOOGLE APPS SCRIPT YANG BARU DI SINI
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyMWpvcU8HLBGWieswM9hjXWYjYhbDELRtOWtjGnKmhn1ZHO10QcMenpw-hOXY5Wrme1A/exec"; 
+
+    function absenManualNama() {
+        var namaInput = document.getElementById('inputNama').value.trim();
+        var statusBox = document.getElementById('statusBox');
+        
+        if (namaInput === "") {
+            statusBox.innerHTML = `<div class="alert alert-error">⚠️ Mohon isi nama siswa terlebih dahulu.</div>`;
+            return;
+        }
+        
+        statusBox.innerHTML = `<div class="alert alert-loading">⏳ Mencari nama siswa dan memproses kehadiran...</div>`;
+        
+        // Mengirimkan objek 'namaInput' ke doPost() di Google Apps Script
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({ namaInput: namaInput }),
+            headers: { "Content-Type": "text/plain;charset=utf-8" }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result === "success") {
+                statusBox.innerHTML = `
+                    <div class="alert alert-success">
+                        🎉 <b>Berhasil Ditambahkan!</b><br>${data.message}
+                    </div>
+                `;
+                document.getElementById('inputNama').value = ""; // Kosongkan input nama kembali
+            } else {
+                statusBox.innerHTML = `
+                    <div class="alert alert-error">
+                        ❌ <b>Gagal:</b><br>${data.message}
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            statusBox.innerHTML = `
+                <div class="alert alert-success">
+                    ✓ <b>Selesai diproses!</b><br>Silakan segarkan halaman Log Kehadiran di Google Sheets Anda.
+                </div>
+            `;
+            document.getElementById('inputNama').value = "";
+        });
+    }
+
+    // Memungkinkan guru langsung menekan tombol 'Enter' setelah mengetik nama siswa
+    document.getElementById('inputNama').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            absenManualNama();
+        }
+    });
+</script>
+
+</body>
+</html>
