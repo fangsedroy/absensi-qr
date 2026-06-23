@@ -112,21 +112,17 @@
             letter-spacing: 0.5px;
         }
 
-        /* Tombol Pertama (Mulai) - Berwarna Biru Ungu */
-        #reader__dashboard button:nth-child(1) {
+        /* Skenario Warna untuk Tombol */
+        #reader__dashboard button {
             background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; 
             box-shadow: 0 4px 12px rgba(76, 81, 191, 0.25) !important;
         }
 
-        /* Tombol Kedua (Berhenti) - Berwarna Merah Tegas */
+        /* Mengubah Khusus Tombol Stop Menjadi Merah Tegas */
+        #reader__dashboard button[id*="stop"], 
         #reader__dashboard button:nth-child(2) {
             background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important; 
             box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25) !important;
-        }
-
-        /* SEMBUNYIKAN TOMBOL PERTAMA JIKA STATUSNYA DISABLED (SAAT AUTOMATIC/MANUAL SCANNING) */
-        #reader__dashboard button:nth-child(1):disabled {
-            display: none !important;
         }
         
         #reader__dashboard button:hover { 
@@ -253,14 +249,39 @@
     let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-    // 👑 LOGIKA OTOMATIS: Klik tombol Start secara mandiri setelah halaman web siap
+    // 👑 FORCE REMOVE SCRIPT: Sensor Pemantau untuk menghapus paksa tombol Start saat Scanning
+    const dashboardObserver = new MutationObserver((mutations) => {
+        const buttons = document.querySelectorAll('#reader__dashboard button');
+        
+        // Jika terdeteksi ada 2 tombol (artinya Start dan Stop sedang muncul berbarengan)
+        if (buttons.length >= 2) {
+            buttons.forEach(btn => {
+                const text = btn.innerText.toUpperCase();
+                // Cari tombol yang mengandung kata START, lalu singkirkan dari HTML
+                if (text.includes('START') || text.includes('MULAI')) {
+                    btn.remove(); 
+                }
+            });
+        }
+    });
+
+    // Jalankan pemantauan pada area dashboard scanner
+    const targetNode = document.getElementById('reader');
+    if (targetNode) {
+        dashboardObserver.observe(targetNode, { childList: true, subtree: true });
+    }
+
+    // TRIGGER OTOMATIS RUNNING SCANNING
     window.addEventListener('load', () => {
         setTimeout(() => {
-            const startButton = document.querySelector('#reader__dashboard button:nth-child(1)');
-            if (startButton && !startButton.disabled) {
-                startButton.click();
+            const startButton = document.querySelector('#reader__dashboard button');
+            if (startButton) {
+                const text = startButton.innerText.toUpperCase();
+                if (text.includes('START') || text.includes('MULAI')) {
+                    startButton.click();
+                }
             }
-        }, 1000); // Tunggu 1 detik agar library selesai memuat daftar hardware kamera HP
+        }, 1000); // Jeda 1 detik demi kestabilan loading kamera HP
     });
 </script>
 
