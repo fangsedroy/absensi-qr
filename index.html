@@ -179,67 +179,86 @@
             border-radius: 20px; 
             text-align: center;
         }
-
-        /* ==========================================
-           🌟 CUSTOM DESAIN SELECT KAMERA (HP MODE) 
+/* ==========================================
+           🌟 PERBAIKAN PRESISI & DESAIN SELECT KAMERA 
            ========================================== */
         
-        /* Merapikan teks label pembungkus select kamera */
-        #reader div[style*="text-align: left"] {
-            text-align: center !important;
-            padding: 10px 15px !important;
-            font-size: 14px !important;
-            font-weight: 600 !important;
-            color: var(--text-muted) !important;
+        /* Mengatur wadah pembungkus kontrol kamera agar presisi di tengah */
+        #reader__dashboard_section_csr {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px 10px 5px 10px !important; /* Memberi jarak renggang atas-bawah yang ideal */
+            width: 100% !important;
         }
 
-        /* Merombak total dropdown select camera */
+        /* Merombak Teks Judul "Select Camera" agar rapi dan tidak berdempetan */
+        #reader div[style*="text-align: left"],
+        #reader__dashboard_section_csr div {
+            text-align: center !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: var(--text-muted) !important;
+            margin-bottom: 8px !important; /* Jarak aman ke kotak dropdown di bawahnya */
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        /* Merombak total elemen Dropdown Pilihan Kamera */
         #reader__camera_selection {
-            width: 90% !important;
-            max-width: 320px !important;
-            padding: 12px 16px !important;
+            width: 85% !important;
+            max-width: 300px !important;
+            padding: 12px 40px 12px 16px !important; /* Padding kanan dilebihkan untuk ruang ikon panah */
             font-size: 14px !important;
             font-weight: 700 !important;
             font-family: inherit !important;
             color: #1e293b !important;
-            background-color: #f1f5f9 !important;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>") !important;
+            background-color: #f8fafc !important; /* Warna latar bersih senada dengan kotak kamera */
+            
+            /* Menambahkan custom ikon panah modern minimalis (SVG) pengganti bawaan HP */
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>") !important;
             background-repeat: no-repeat !important;
-            background-position: right 12px center !important;
+            background-position: right 16px center !important;
             background-size: 16px !important;
+            
             border: 2px solid #e2e8f0 !important;
-            border-radius: 12px !important;
-            display: inline-block !important;
-            margin: 8px auto 14px auto !important;
+            border-radius: 14px !important; /* Sudut melengkung halus premium */
+            display: block !important;
+            margin: 0 auto 15px auto !important; /* Margin auto memastikan posisi horizontal super presisi di tengah */
             outline: none !important;
-            transition: all 0.2s ease !important;
-            -webkit-appearance: none !important; /* Hilangkan panah kaku bawaan HP Android/iOS */
+            transition: all 0.25s ease !important;
+            
+            /* Mematikan paksa desain kaku asli bawaan sistem HP */
+            -webkit-appearance: none !important;
             -moz-appearance: none !important;
             appearance: none !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
         }
 
-        /* Efek fokus saat drop-down ditekan */
+        /* Efek interaktif saat dropdown ditekan oleh user */
         #reader__camera_selection:focus {
             border-color: var(--primary) !important;
             background-color: #ffffff !important;
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1) !important;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
+            transform: scale(1.01); /* Efek pop-up mikro yang halus */
         }
 
-        /* Merapikan jarak tautan "Scan an Image File" di bawah tombol */
+        /* Menyelaraskan teks link swap "Scan an Image File" di bagian paling bawah */
         #reader__dashboard_section_swaplink {
             display: inline-block !important;
-            margin-top: 8px !important;
-            margin-bottom: 12px !important;
-            color: var(--primary) !important;
-            font-weight: 700 !important;
+            margin: 12px auto 5px auto !important;
+            color: var(--text-muted) !important;
+            font-weight: 600 !important;
             text-decoration: none !important;
             font-size: 13px !important;
-            transition: color 0.2s !important;
+            transition: all 0.2s ease !important;
+            opacity: 0.8;
         }
 
         #reader__dashboard_section_swaplink:hover {
-            color: var(--primary-hover) !important;
+            color: var(--primary) !important;
+            opacity: 1;
         }
     </style>
 </head>
