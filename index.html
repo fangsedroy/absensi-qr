@@ -87,19 +87,18 @@
             font-weight: 600; 
         }
 
-        /* Box Penampung Tombol Start & Stop Bawaan Library */
+        /* Box Penampung Tombol Bawaan Library */
         #reader__dashboard_section_csr + div {
             display: block !important; 
             margin-top: 25px !important; 
             padding-top: 5px !important;
         }
         
-        /* DESAIN GAYA TOMBOL UTAMA (START / STOP SCANNING) */
+        /* DESAIN GAYA UTAMA SEMUA TOMBOL DI DASHBOARD */
         #reader__dashboard button { 
             display: block !important;
             width: 100% !important;
             max-width: 280px !important;
-            background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; 
             color: white !important; 
             border: none !important; 
             padding: 14px 20px !important; 
@@ -108,21 +107,26 @@
             border-radius: 12px !important; 
             cursor: pointer !important; 
             transition: all 0.2s ease !important; 
-            box-shadow: 0 4px 12px rgba(76, 81, 191, 0.25) !important; 
             margin: 12px auto !important; 
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        /* 👑 TRID SAKTI: SEMBUNYIKAN TOMBOL START SAAT KAMERA SEDANG SCANNING */
-        #reader__dashboard button[id*="start"]:disabled {
-            display: none !important;
+        /* Tombol Pertama (Mulai) - Berwarna Biru Ungu */
+        #reader__dashboard button:nth-child(1) {
+            background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; 
+            box-shadow: 0 4px 12px rgba(76, 81, 191, 0.25) !important;
         }
 
-        /* Mengubah Khusus Tombol Stop Menjadi Merah Lembut */
-        #reader__dashboard button[id*="stop"] { 
+        /* Tombol Kedua (Berhenti) - Berwarna Merah Tegas */
+        #reader__dashboard button:nth-child(2) {
             background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important; 
-            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25) !important; 
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25) !important;
+        }
+
+        /* 👑 KUNCI PERBAIKAN: SEMBUNYIKAN TOMBOL PERTAMA JIKA STATUSNYA DISABLED (SAAT SCANNING) */
+        #reader__dashboard button:nth-child(1):disabled {
+            display: none !important;
         }
         
         #reader__dashboard button:hover { 
