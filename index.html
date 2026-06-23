@@ -214,33 +214,52 @@
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyMWpvcU8HLBGWieswM9hjXWYjYhbDELRtOWtjGnKmhn1ZHO10QcMenpw-hOXY5Wrme1A/exec"; 
 
     function onScanSuccess(decodedText, decodedResult) {
-        html5QrcodeScanner.clear();
-        document.getElementById('status').innerHTML = '<div class="alert alert-loading">⏳ Memproses data log absensi...</div>';
+    // Menghentikan scan sementara agar tidak duplikat kirim data
+    html5QrcodeScanner.clear(); 
+    
+    // Anggap elemen kotak notifikasi sukses Anda memiliki ID atau struktur pembungkus seperti gambar Anda
+    var elementHasil = document.getElementById('resultContainer'); // Sesuaikan ID kontainer hasil Anda
+    
+    elementHasil.innerHTML = `<div>⏳ Memproses data scan...</div>`;
 
-        fetch(WEB_APP_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify({ nis: decodedText }),
-            headers: { "Content-Type": "text/plain;charset=utf-8" }
-        })
-        .then(() => {
-            document.getElementById('status').innerHTML = `
-                <div class="alert alert-success">
-                    🎉 <b>Scan Berhasil!</b><br>ID Siswa: ${decodedText} telah dicatat.
+    fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ nis: decodedText }),
+        headers: { "Content-Type": "text/plain;charset=utf-8" }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.result === "success") {
+            // 🌟 SEKARANG MENAMPILKAN NAMA SISWA YANG DIKIRIM DARI SERVER, BUKAN ID/NIS NYA LAGI
+            elementHasil.innerHTML = `
+                <div class="alert-success" style="padding: 20px; border-radius: 16px; background-color: #e0f2fe; color: #0369a1; text-align: center;">
+                    <h3>🎉 Scan Berhasil!</h3>
+                    <p style="font-size: 18px; font-weight: bold; margin-top: 8px;">
+                        ${data.nama} telah dicatat.
+                    </p>
+                    <button onclick="restartScanner()" style="margin-top: 15px; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        🔄 Scan Berikutnya
+                    </button>
                 </div>
-                <button class="btn-success-action" onclick="location.reload()">🔄 Scan Berikutnya</button>
             `;
-        })
-        .catch(error => {
-            console.error(error);
-            document.getElementById('status').innerHTML = `
-                <div class="alert alert-error">
-                    ❌ <b>Gagal terhubung ke server.</b> Periksa jaringan Anda.
+        } else {
+            elementHasil.innerHTML = `
+                <div class="alert-error" style="padding: 20px; background-color: #fee2e2; color: #991b1b; text-align: center; border-radius: 16px;">
+                    ❌ <b>Gagal:</b> ${data.message}
                 </div>
-                <button class="btn-success-action" onclick="location.reload()">🔄 Coba Lagi</button>
             `;
-        });
-    }
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        elementHasil.innerHTML = `<div class="alert-error">❌ Terjadi gangguan koneksi internet.</div>`;
+    });
+}
+
+// Fungsi untuk menyalakan kembali kamera setelah tombol 'Scan Berikutnya' ditekan
+function restartScanner() {
+    location.reload(); // Cara paling aman dan bersih untuk merestart library html5-qrcode
+}
 
     function onScanFailure(error) {}
 
