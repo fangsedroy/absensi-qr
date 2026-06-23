@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistem Presensi Smart QR</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
@@ -25,7 +25,7 @@
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
         }
 
         body { 
@@ -34,36 +34,35 @@
             align-items: center; 
             justify-content: center; 
             min-height: 100vh; 
-            padding: 20px; 
+            padding: 16px; 
         }
 
         .container { 
             background: var(--card-bg); 
-            max-width: 480px; 
+            max-width: 450px; 
             width: 100%; 
-            padding: 35px 25px; 
+            padding: 30px 20px; 
             border-radius: 28px; 
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); 
             text-align: center;
-            transition: all 0.3s ease;
         }
 
         /* Desain Header */
         .icon-wrapper {
-            font-size: 40px;
-            margin-bottom: 15px;
+            font-size: 36px;
+            margin-bottom: 12px;
             display: inline-block;
             background: #f1f5f9;
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
             border-radius: 50%;
         }
 
         h2 { 
             color: var(--text-main); 
             margin-bottom: 8px; 
-            font-size: 24px; 
+            font-size: 22px; 
             font-weight: 800;
             letter-spacing: -0.5px;
         }
@@ -73,31 +72,112 @@
             font-size: 14px; 
             margin-bottom: 25px; 
             line-height: 1.5;
+            padding: 0 10px;
         }
 
         /* Area Kamera Scanner */
         #reader { 
-            width: 100%; 
-            border-radius: 20px; 
-            overflow: hidden; 
+            width: 100% !important; 
+            border-radius: 20px !important; 
+            overflow: hidden !important; 
             border: 2px solid #e2e8f0 !important; 
-            background: #f8fafc;
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            background: #f8fafc !important;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04) !important;
         }
 
-        /* Merapikan Tombol Kamera Bawaan Library */
+        /* Video / Kamera Bagian Dalam */
+        #reader video {
+            border-radius: 16px !important;
+            object-fit: cover !important;
+        }
+
+        /* ==========================================
+           🌟 STRUKTUR UTAMA KONTROL KAMERA (FIXED PRESISI)
+           ========================================== */
+        
+        /* Wadah Pembungkus Pilihan Kamera & Tombol Start/Stop */
+        #reader__dashboard {
+            padding: 20px 15px !important;
+            background: #ffffff !important;
+        }
+
+        #reader__dashboard_section_csr {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            margin: 0 auto !important;
+            float: none !important;
+        }
+
+        /* Merapikan Teks Label Judul "Select Camera" */
+        #reader div[style*="text-align: left"],
+        #reader__dashboard_section_csr div {
+            text-align: center !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: var(--text-muted) !important;
+            margin: 5px 0 10px 0 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.8px !important;
+            width: 100% !important;
+            float: none !important;
+        }
+
+        /* Merombak Total Dropdown Select Camera (Kebal Perubahan Klik) */
+        #reader__camera_selection {
+            display: block !important;
+            width: 100% !important;
+            max-width: 290px !important;
+            margin: 0 auto 15px auto !important;
+            padding: 12px 40px 12px 16px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            font-family: inherit !important;
+            color: #1e293b !important;
+            background-color: #f1f5f9 !important;
+            
+            /* Custom Ikon Panah Modern Minimalis */
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 16px center !important;
+            background-size: 16px !important;
+            
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 14px !important;
+            outline: none !important;
+            transition: all 0.2s ease !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+            float: none !important;
+        }
+
+        #reader__camera_selection:focus {
+            border-color: var(--primary) !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
+        }
+
+        /* Merapikan Seluruh Tombol Utama (Start / Stop Scanning) */
         #reader button { 
+            display: inline-block !important;
+            width: 100% !important;
+            max-width: 290px !important;
             background: var(--primary) !important; 
             color: white !important; 
             border: none !important; 
-            padding: 12px 24px !important; 
-            font-size: 14px !important; 
+            padding: 14px 24px !important; 
+            font-size: 15px !important; 
             font-weight: 700 !important; 
-            border-radius: 12px !important; 
+            border-radius: 14px !important; 
             cursor: pointer !important; 
-            margin: 10px 4px !important;
+            margin: 5px auto !important;
             transition: all 0.2s ease !important;
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2) !important;
+            float: none !important;
         }
 
         #reader button:hover { 
@@ -105,7 +185,7 @@
             transform: translateY(-1px);
         }
 
-        /* Desain Khusus Tombol Stop Scanning */
+        /* Tombol Stop Scanning Warna Merah Crimson */
         #reader button[id*="stop"] {
             background: #ef4444 !important;
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
@@ -114,7 +194,24 @@
             background: #dc2626 !important;
         }
 
-        /* Box Status Notifikasi */
+        /* Tautan Ganti Mode "Scan an Image File" */
+        #reader__dashboard_section_swaplink {
+            display: block !important;
+            margin: 12px auto 0 auto !important;
+            color: var(--text-muted) !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            font-size: 13px !important;
+            opacity: 0.8;
+            width: fit-content !important;
+            float: none !important;
+        }
+        #reader__dashboard_section_swaplink:hover {
+            color: var(--primary) !important;
+            opacity: 1;
+        }
+
+        /* Box Status Notifikasi Berhasil / Gagal */
         .result-box { 
             margin-top: 20px; 
             display: none; 
@@ -122,7 +219,7 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -132,134 +229,13 @@
             background-color: var(--success-bg); 
             color: var(--success-text); 
             border: 1px solid var(--success-border);
-            text-align: center; 
         }
 
-        .success-icon {
-            font-size: 45px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .student-name { 
-            font-size: 22px; 
-            font-weight: 800; 
-            color: #0f172a; 
-            margin: 12px 0; 
-            display: block; 
-            letter-spacing: -0.5px;
-        }
-
-        .btn-next { 
-            margin-top: 20px; 
-            padding: 14px 24px; 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 14px; 
-            cursor: pointer; 
-            font-weight: 700; 
-            font-size: 15px;
-            width: 100%; 
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
-        }
-
-        .btn-next:hover { 
-            background: var(--primary-hover); 
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
-        }
-
-        .alert-error { 
-            padding: 20px; 
-            background-color: var(--error-bg); 
-            color: var(--error-text); 
-            border: 1px solid var(--error-border);
-            border-radius: 20px; 
-            text-align: center;
-        }
-/* ==========================================
-           🌟 PERBAIKAN PRESISI & DESAIN SELECT KAMERA 
-           ========================================== */
-        
-        /* Mengatur wadah pembungkus kontrol kamera agar presisi di tengah */
-        #reader__dashboard_section_csr {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 20px 10px 5px 10px !important; /* Memberi jarak renggang atas-bawah yang ideal */
-            width: 100% !important;
-        }
-
-        /* Merombak Teks Judul "Select Camera" agar rapi dan tidak berdempetan */
-        #reader div[style*="text-align: left"],
-        #reader__dashboard_section_csr div {
-            text-align: center !important;
-            font-size: 14px !important;
-            font-weight: 700 !important;
-            color: var(--text-muted) !important;
-            margin-bottom: 8px !important; /* Jarak aman ke kotak dropdown di bawahnya */
-            text-transform: uppercase !important;
-            letter-spacing: 0.5px !important;
-        }
-
-        /* Merombak total elemen Dropdown Pilihan Kamera */
-        #reader__camera_selection {
-            width: 85% !important;
-            max-width: 300px !important;
-            padding: 12px 40px 12px 16px !important; /* Padding kanan dilebihkan untuk ruang ikon panah */
-            font-size: 14px !important;
-            font-weight: 700 !important;
-            font-family: inherit !important;
-            color: #1e293b !important;
-            background-color: #f8fafc !important; /* Warna latar bersih senada dengan kotak kamera */
-            
-            /* Menambahkan custom ikon panah modern minimalis (SVG) pengganti bawaan HP */
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>") !important;
-            background-repeat: no-repeat !important;
-            background-position: right 16px center !important;
-            background-size: 16px !important;
-            
-            border: 2px solid #e2e8f0 !important;
-            border-radius: 14px !important; /* Sudut melengkung halus premium */
-            display: block !important;
-            margin: 0 auto 15px auto !important; /* Margin auto memastikan posisi horizontal super presisi di tengah */
-            outline: none !important;
-            transition: all 0.25s ease !important;
-            
-            /* Mematikan paksa desain kaku asli bawaan sistem HP */
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            appearance: none !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
-        }
-
-        /* Efek interaktif saat dropdown ditekan oleh user */
-        #reader__camera_selection:focus {
-            border-color: var(--primary) !important;
-            background-color: #ffffff !important;
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
-            transform: scale(1.01); /* Efek pop-up mikro yang halus */
-        }
-
-        /* Menyelaraskan teks link swap "Scan an Image File" di bagian paling bawah */
-        #reader__dashboard_section_swaplink {
-            display: inline-block !important;
-            margin: 12px auto 5px auto !important;
-            color: var(--text-muted) !important;
-            font-weight: 600 !important;
-            text-decoration: none !important;
-            font-size: 13px !important;
-            transition: all 0.2s ease !important;
-            opacity: 0.8;
-        }
-
-        #reader__dashboard_section_swaplink:hover {
-            color: var(--primary) !important;
-            opacity: 1;
-        }
+        .success-icon { font-size: 40px; margin-bottom: 8px; display: block; }
+        .student-name { font-size: 22px; font-weight: 800; color: #0f172a; margin: 10px 0; display: block; letter-spacing: -0.5px; }
+        .btn-next { margin-top: 18px; padding: 14px 24px; background: var(--primary); color: white; border: none; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 15px; width: 100%; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); }
+        .btn-next:hover { background: var(--primary-hover); }
+        .alert-error { padding: 20px; background-color: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); border-radius: 20px; }
     </style>
 </head>
 <body>
@@ -267,7 +243,7 @@
 <div class="container">
     <div class="icon-wrapper">📷</div>
     <h2>Presensi QR Code</h2>
-    <p class="subtitle">Arahkan kartu QR siswa ke posisi tengah kamera untuk merekam data kehadiran secara otomatis.</p>
+    <p class="subtitle">Arahkan kartu QR siswa ke posisi tengah kamera untuk merekam kehadiran otomatis.</p>
     
     <div id="reader"></div>
     
@@ -275,22 +251,20 @@
 </div>
 
 <script>
-    // ⚠️ MASUKKAN URL WEB APP EXEC APPS SCRIPT ANDA DI SINI
+    // ⚠️ PASTIKAN BERISI URL WEB APP EXEC SCRIPT ANDA
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyMWpvcU8HLBGWieswM9hjXWYjYhbDELRtOWtjGnKmhn1ZHO10QcMenpw-hOXY5Wrme1A/exec"; 
 
     function onScanSuccess(decodedText, decodedResult) {
-        // Matikan scanner agar tidak mengirim data berulang-ulang
         html5QrcodeScanner.clear();
         
         var elementHasil = document.getElementById('resultContainer');
         elementHasil.style.display = "block";
         elementHasil.innerHTML = `
-            <div style="padding: 20px; color: var(--text-muted); font-weight: 600;">
+            <div style="padding: 15px; color: var(--text-muted); font-weight: 600;">
                 ⏳ Memproses verifikasi data, mohon tunggu...
             </div>
         `;
 
-        // Kirim NIS ke Google Apps Script
         fetch(WEB_APP_URL, {
             method: "POST",
             body: JSON.stringify({ nis: decodedText }),
@@ -299,23 +273,22 @@
         .then(response => response.json())
         .then(data => {
             if (data.result === "success") {
-                // Tampilkan nama siswa hasil respon server
                 elementHasil.innerHTML = `
                     <div class="alert-success">
                         <span class="success-icon">🎉</span>
                         <h3 style="font-weight: 700; font-size: 18px;">Scan Berhasil!</h3>
                         <span class="student-name">${data.nama}</span>
-                        <p style="font-size: 14px; opacity: 0.9;">Data log kehadiran anak telah sukses dimasukkan ke sistem.</p>
+                        <p style="font-size: 14px; opacity: 0.9;">Data log kehadiran siswa telah sukses disimpan.</p>
                         <button class="btn-next" onclick="restartScanner()">🔄 Scan Berikutnya</button>
                     </div>
                 `;
             } else {
                 elementHasil.innerHTML = `
                     <div class="alert-error">
-                        <span style="font-size: 40px; display:block; margin-bottom:10px;">❌</span>
-                        <h3 style="font-weight: 700; margin-bottom: 5px;">Gagal Mengenali Kartu</h3>
+                        <span style="font-size: 36px; display:block; margin-bottom:8px;">❌</span>
+                        <h3 style="font-weight: 700; margin-bottom: 4px;">Gagal Mengenali Kartu</h3>
                         <p style="font-size: 14px;">${data.message}</p>
-                        <button class="btn-next" style="background:#ef4444; box-shadow: 0 4px 12px rgba(239,68,68,0.25);" onclick="restartScanner()">Coba Lagi</button>
+                        <button class="btn-next" style="background:#ef4444;" onclick="restartScanner()">Coba Lagi</button>
                     </div>
                 `;
             }
@@ -324,16 +297,15 @@
             console.error(error);
             elementHasil.innerHTML = `
                 <div class="alert-error">
-                    <span style="font-size: 40px; display:block; margin-bottom:10px;">⚠️</span>
-                    <h3 style="font-weight: 700; margin-bottom: 5px;">Gangguan Koneksi</h3>
-                    <p style="font-size: 14px;">Gagal terhubung ke server Google Sheets. Cek paket data internet Anda.</p>
-                    <button class="btn-next" style="background:#f59e0b; box-shadow: 0 4px 12px rgba(245,158,11,0.25);" onclick="restartScanner()">Ulangi</button>
+                    <span style="font-size: 36px; display:block; margin-bottom:8px;">⚠️</span>
+                    <h3 style="font-weight: 700; margin-bottom: 4px;">Gangguan Jaringan</h3>
+                    <p style="font-size: 14px;">Gagal terhubung ke database server Sheets.</p>
+                    <button class="btn-next" style="background:#f59e0b;" onclick="restartScanner()">Ulangi</button>
                 </div>
             `;
         });
     }
 
-    // Inisialisasi scanner dengan setelan awal bawaan Anda yang stabil
     var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
     html5QrcodeScanner.render(onScanSuccess);
 
