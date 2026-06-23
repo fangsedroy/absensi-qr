@@ -61,16 +61,15 @@
             border-top: 1px solid #e2e8f0; 
         }
         
-        /* Pengaturan Area Dropdown Kamera */
+        /* Pengaturan Dropdown Kamera */
         #reader__dashboard_section_csr { 
             display: block !important; 
-            margin-bottom: 20px !important; 
+            margin-bottom: 15px !important; 
             font-weight: 600; 
             color: #4a5568; 
             font-size: 14px; 
         }
         
-        /* Mempercantik Seleksi Menu Kamera */
         #reader__dashboard_section_csr select { 
             padding: 12px 15px !important; 
             border-radius: 12px !important; 
@@ -86,89 +85,104 @@
             text-align-last: center; 
             font-weight: 600; 
         }
+
+        /* SUSUNAN TOMBOL START & STOP AGAR SEJAJAR & PRESISI */
+        #reader__dashboard_section_csr + div {
+            display: flex !important;
+            justify-content: center !important;
+            gap: 12px !important;
+            max-width: 340px;
+            margin: 0 auto !important;
+        }
         
-        /* DESAIN PREMIUM SEMUA TOMBOL (Bawaan & Kustom) */
-        button, 
-        #reader__dashboard button, 
-        #reader__dashboard_section_swap a { 
+        /* GAYA TOMBOL UTAMA (START / STOP) */
+        #reader__dashboard button { 
+            flex: 1 !important; /* Membuat lebar tombol seimbang kiri-kanan */
+            width: auto !important;
             background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; 
             color: white !important; 
             border: none !important; 
-            padding: 14px 28px !important; 
-            font-size: 14px !important; 
+            padding: 14px 10px !important; 
+            font-size: 13px !important; 
             font-weight: 700 !important; 
             border-radius: 12px !important; 
             cursor: pointer !important; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; 
-            box-shadow: 0 4px 12px rgba(76, 81, 191, 0.3) !important; 
-            margin: 8px auto !important; 
-            display: inline-flex !important; 
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none !important; 
+            transition: all 0.2s ease !important; 
+            box-shadow: 0 4px 12px rgba(76, 81, 191, 0.25) !important; 
+            margin: 0 !important; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
-        /* Efek Interaktif Saat Tombol Disentuh/Hover */
-        button:hover, 
-        #reader__dashboard button:hover,
-        #reader__dashboard_section_swap a:hover { 
-            transform: translateY(-2px) !important; 
-            box-shadow: 0 6px 18px rgba(76, 81, 191, 0.45) !important; 
-        }
-        
-        button:active, 
-        #reader__dashboard button:active {
-            transform: translateY(0) !important;
-        }
-        
-        /* Tombol Berhenti Akses Kamera (Warna Merah Tegas) */
+
+        /* Tombol Stop Akses Kamera (Merah Presisi) */
         #reader__dashboard button[id*="stop"] { 
             background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important; 
-            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3) !important; 
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25) !important; 
         }
         
-        /* Area Berpindah Antara Kamera & Unggah File */
+        #reader__dashboard button:hover { 
+            transform: translateY(-1px) !important; 
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15) !important; 
+        }
+        
+        /* Link Pindah Unggah Berkas */
         #reader__dashboard_section_swap { 
-            margin-top: 15px !important; 
+            margin-top: 18px !important; 
             display: block !important; 
         }
 
-        /* Tampilan Hasil Validasi Absensi */
+        #reader__dashboard_section_swap a {
+            color: #4c51bf !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            border-bottom: 2px dashed #667eea;
+            padding-bottom: 2px;
+            transition: color 0.2s ease;
+        }
+        #reader__dashboard_section_swap a:hover {
+            color: #764ba2 !important;
+        }
+
+        /* TAMPILAN NOTIFIKASI DAN TOMBOL BARU */
         #status { 
             margin-top: 25px; 
-            font-size: 16px; 
-            font-weight: 600; 
             min-height: 50px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            flex-direction: column; 
         }
         
         .alert { 
             padding: 14px 20px; 
             border-radius: 14px; 
-            width: 100%; 
+            font-size: 15px;
+            font-weight: 600;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             animation: slideUp 0.4s ease; 
         }
         
-        .alert-success { 
-            background-color: #ebf8ff; 
-            color: #2b6cb0; 
-            border: 1px solid #bee3f8; 
+        .alert-success { background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+        .alert-loading { background-color: #f7fafc; color: #4a5568; }
+        .alert-error { background-color: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+
+        /* Tombol Sukses Scan Yang Tidak Kaku */
+        .btn-success-action {
+            background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(76, 81, 191, 0.35);
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
         }
-        
-        .alert-loading { 
-            background-color: #f7fafc; 
-            color: #4a5568; 
-        }
-        
-        .alert-error { 
-            background-color: #fff5f5; 
-            color: #c53030; 
-            border: 1px solid #fed7d7; 
+        .btn-success-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 81, 191, 0.45);
         }
         
         @keyframes slideUp { 
@@ -209,7 +223,7 @@
                 <div class="alert alert-success">
                     🎉 <b>Scan Berhasil!</b><br>ID Siswa: ${decodedText} telah dicatat.
                 </div>
-                <button onclick="location.reload()">🔄 Scan Berikutnya</button>
+                <button class="btn-success-action" onclick="location.reload()">🔄 Scan Berikutnya</button>
             `;
         })
         .catch(error => {
@@ -218,7 +232,7 @@
                 <div class="alert alert-error">
                     ❌ <b>Gagal terhubung ke server.</b> Periksa jaringan Anda.
                 </div>
-                <button onclick="location.reload()">🔄 Coba Lagi</button>
+                <button class="btn-success-action" onclick="location.reload()">🔄 Coba Lagi</button>
             `;
         });
     }
