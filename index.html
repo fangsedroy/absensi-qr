@@ -77,12 +77,12 @@
 
         /* Area Kamera Scanner */
         #reader { 
-            width: 100%; 
-            border-radius: 20px; 
-            overflow: hidden; 
+            width: 100% !important; 
+            border-radius: 20px !important; 
+            overflow: hidden !important; 
             border: 2px solid #e2e8f0 !important; 
-            background: #f8fafc;
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            background: #f8fafc !important;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
         }
 
         /* Merapikan Tombol Kamera Bawaan Library */
@@ -95,9 +95,11 @@
             font-weight: 700 !important; 
             border-radius: 12px !important; 
             cursor: pointer !important; 
-            margin: 10px 4px !important;
+            margin: 10px auto !important;
             transition: all 0.2s ease !important;
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2) !important;
+            display: inline-block !important;
+            float: none !important;
         }
 
         #reader button:hover { 
@@ -112,6 +114,58 @@
         }
         #reader button[id*="stop"]:hover {
             background: #dc2626 !important;
+        }
+
+        /* 🌟 KUNCI PRESENSI DAN PERBAIKAN DROPDOWN SELECT KAMERA */
+        #reader__dashboard_section_csr {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            float: none !important;
+        }
+
+        #reader div[style*="text-align: left"],
+        #reader__dashboard_section_csr div {
+            text-align: center !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: var(--text-muted) !important;
+            margin: 6px 0 !important;
+            text-transform: uppercase !important;
+            width: 100% !important;
+            float: none !important;
+        }
+
+        #reader__camera_selection {
+            display: block !important;
+            width: 90% !important;
+            max-width: 280px !important;
+            margin: 5px auto 12px auto !important;
+            padding: 10px 35px 10px 14px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #1e293b !important;
+            background-color: #f1f5f9 !important;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 14px center !important;
+            background-size: 15px !important;
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            outline: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            float: none !important;
+        }
+
+        #reader__dashboard_section_swaplink {
+            display: block !important;
+            margin: 10px auto !important;
+            width: fit-content !important;
+            float: none !important;
         }
 
         /* Box Status Notifikasi */
@@ -179,6 +233,36 @@
             border-radius: 20px; 
             text-align: center;
         }
+
+        /* 🌟 TOMBOL MENU MENUJU ADMIN.HTML */
+        .admin-nav-wrapper {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .btn-admin {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #f1f5f9;
+            color: #475569;
+            border: none;
+            padding: 12px 20px;
+            width: 100%;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-admin:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
     </style>
 </head>
 <body>
@@ -191,6 +275,12 @@
     <div id="reader"></div>
     
     <div id="resultContainer" class="result-box"></div>
+
+    <div class="admin-nav-wrapper">
+        <a href="admin.html" class="btn-admin">
+            ⚙️ Masuk Halaman Admin Guru
+        </a>
+    </div>
 </div>
 
 <script>
