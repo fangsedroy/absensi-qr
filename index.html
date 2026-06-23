@@ -55,7 +55,7 @@
         /* Panel Menu Kontrol di Bawah Kamera */
         #reader__dashboard { 
             background: #f8fafc !important; 
-            padding: 30px 20px !important; /* Memberikan ruang udara ekstra di dalam panel */
+            padding: 30px 20px !important; 
             border-bottom-left-radius: 16px; 
             border-bottom-right-radius: 16px; 
             border-top: 1px solid #e2e8f0; 
@@ -64,7 +64,7 @@
         /* Area Teks & Dropdown Pilihan Kamera */
         #reader__dashboard_section_csr { 
             display: block !important; 
-            margin-bottom: 25px !important; /* Dorong elemen tombol di bawahnya agar menjauh */
+            margin-bottom: 25px !important; 
             font-weight: 600; 
             color: #4a5568; 
             font-size: 14px; 
@@ -87,10 +87,10 @@
             font-weight: 600; 
         }
 
-        /* PERBAIKAN UTAMA: Box Penampung Tombol Start & Stop Bawaan Library */
+        /* Box Penampung Tombol Start & Stop Bawaan Library */
         #reader__dashboard_section_csr + div {
-            display: block !important; /* Kembalikan ke susunan block normal */
-            margin-top: 25px !important; /* PAKSA JARAK LEGA DI ATAS TOMBOL START AGAR TIDAK MEPET */
+            display: block !important; 
+            margin-top: 25px !important; 
             padding-top: 5px !important;
         }
         
@@ -109,9 +109,14 @@
             cursor: pointer !important; 
             transition: all 0.2s ease !important; 
             box-shadow: 0 4px 12px rgba(76, 81, 191, 0.25) !important; 
-            margin: 12px auto !important; /* Beri jarak atas-bawah antar tombol secara seimbang */
+            margin: 12px auto !important; 
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        /* 👑 TRID SAKTI: SEMBUNYIKAN TOMBOL START SAAT KAMERA SEDANG SCANNING */
+        #reader__dashboard button[id*="start"]:disabled {
+            display: none !important;
         }
 
         /* Mengubah Khusus Tombol Stop Menjadi Merah Lembut */
