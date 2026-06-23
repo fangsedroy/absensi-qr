@@ -64,7 +64,7 @@
         /* Pengaturan Dropdown Kamera */
         #reader__dashboard_section_csr { 
             display: block !important; 
-            margin-bottom: 15px !important; 
+            margin-bottom: 25px !important; /* Menambah jarak bawah area kamera */
             font-weight: 600; 
             color: #4a5568; 
             font-size: 14px; 
@@ -81,23 +81,23 @@
             width: 100% !important; 
             max-width: 300px !important; 
             display: block !important; 
-            margin: 10px auto 0 auto !important; 
+            margin: 12px auto 0 auto !important; /* Tambah ruang di atas select box */
             text-align-last: center; 
             font-weight: 600; 
         }
 
-        /* SUSUNAN TOMBOL START & STOP AGAR SEJAJAR & PRESISI */
+        /* SUSUNAN TOMBOL SEJAJAR & PRESISI DENGAN JARAK AMAN */
         #reader__dashboard_section_csr + div {
             display: flex !important;
             justify-content: center !important;
             gap: 12px !important;
             max-width: 340px;
-            margin: 0 auto !important;
+            margin: 15px auto 0 auto !important; /* MEMBERI JARAK ATAS AGAR TIDAK MEPET SELECTION */
         }
         
         /* GAYA TOMBOL UTAMA (START / STOP) */
         #reader__dashboard button { 
-            flex: 1 !important; /* Membuat lebar tombol seimbang kiri-kanan */
+            flex: 1 !important; 
             width: auto !important;
             background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; 
             color: white !important; 
@@ -127,7 +127,7 @@
         
         /* Link Pindah Unggah Berkas */
         #reader__dashboard_section_swap { 
-            margin-top: 18px !important; 
+            margin-top: 22px !important; 
             display: block !important; 
         }
 
