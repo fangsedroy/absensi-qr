@@ -3,28 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presensi QR Code</title>
+    <title>Sistem Presensi Smart QR</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .container { background: white; max-width: 500px; width: 100%; padding: 30px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
-        h2 { color: #333; margin-bottom: 5px; font-size: 24px; }
-        .subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
-        #reader { width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #ddd !important; }
-        .result-box { margin-top: 20px; display: none; }
-        .alert-success { padding: 20px; border-radius: 12px; background-color: #e0f2fe; color: #0369a1; text-align: center; }
-        .student-name { font-size: 20px; font-weight: bold; color: #0f172a; margin: 10px 0; display: block; }
-        .btn-next { margin-top: 15px; padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn-next:hover { background: #2563eb; }
-        .alert-error { padding: 15px; background-color: #fee2e2; color: #991b1b; text-align: center; border-radius: 12px; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: #ffffff;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success-bg: #ecfdf5;
+            --success-text: #065f46;
+            --success-border: #a7f3d0;
+            --error-bg: #fef2f2;
+            --error-text: #991b1b;
+            --error-border: #fca5a5;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif; 
+        }
+
+        body { 
+            background: var(--bg-gradient); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+
+        .container { 
+            background: var(--card-bg); 
+            max-width: 480px; 
+            width: 100%; 
+            padding: 35px 25px; 
+            border-radius: 28px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); 
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Desain Header */
+        .icon-wrapper {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: #f1f5f9;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+        }
+
+        h2 { 
+            color: var(--text-main); 
+            margin-bottom: 8px; 
+            font-size: 24px; 
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle { 
+            color: var(--text-muted); 
+            font-size: 14px; 
+            margin-bottom: 25px; 
+            line-height: 1.5;
+        }
+
+        /* Area Kamera Scanner */
+        #reader { 
+            width: 100%; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            border: 2px solid #e2e8f0 !important; 
+            background: #f8fafc;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        /* Merapikan Tombol Kamera Bawaan Library */
+        #reader button { 
+            background: var(--primary) !important; 
+            color: white !important; 
+            border: none !important; 
+            padding: 12px 24px !important; 
+            font-size: 14px !important; 
+            font-weight: 700 !important; 
+            border-radius: 12px !important; 
+            cursor: pointer !important; 
+            margin: 10px 4px !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2) !important;
+        }
+
+        #reader button:hover { 
+            background: var(--primary-hover) !important; 
+            transform: translateY(-1px);
+        }
+
+        /* Desain Khusus Tombol Stop Scanning */
+        #reader button[id*="stop"] {
+            background: #ef4444 !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+        }
+        #reader button[id*="stop"]:hover {
+            background: #dc2626 !important;
+        }
+
+        /* Box Status Notifikasi */
+        .result-box { 
+            margin-top: 20px; 
+            display: none; 
+            animation: slideUp 0.4s ease forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success { 
+            padding: 25px 20px; 
+            border-radius: 20px; 
+            background-color: var(--success-bg); 
+            color: var(--success-text); 
+            border: 1px solid var(--success-border);
+            text-align: center; 
+        }
+
+        .success-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .student-name { 
+            font-size: 22px; 
+            font-weight: 800; 
+            color: #0f172a; 
+            margin: 12px 0; 
+            display: block; 
+            letter-spacing: -0.5px;
+        }
+
+        .btn-next { 
+            margin-top: 20px; 
+            padding: 14px 24px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            font-size: 15px;
+            width: 100%; 
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-next:hover { 
+            background: var(--primary-hover); 
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+        }
+
+        .alert-error { 
+            padding: 20px; 
+            background-color: var(--error-bg); 
+            color: var(--error-text); 
+            border: 1px solid var(--error-border);
+            border-radius: 20px; 
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>PRESENSI QR CODE</h2>
-    <p class="subtitle">Arahkan kartu QR siswa ke kamera atau unggah berkas gambar</p>
+    <div class="icon-wrapper">📷</div>
+    <h2>Presensi QR Code</h2>
+    <p class="subtitle">Arahkan kartu QR siswa ke posisi tengah kamera untuk merekam data kehadiran secara otomatis.</p>
     
     <div id="reader"></div>
     
@@ -41,7 +203,11 @@
         
         var elementHasil = document.getElementById('resultContainer');
         elementHasil.style.display = "block";
-        elementHasil.innerHTML = `<div style="color:#666;">⏳ Mencatat kehadiran...</div>`;
+        elementHasil.innerHTML = `
+            <div style="padding: 20px; color: var(--text-muted); font-weight: 600;">
+                ⏳ Memproses verifikasi data, mohon tunggu...
+            </div>
+        `;
 
         // Kirim NIS ke Google Apps Script
         fetch(WEB_APP_URL, {
@@ -55,17 +221,20 @@
                 // Tampilkan nama siswa hasil respon server
                 elementHasil.innerHTML = `
                     <div class="alert-success">
-                        <h3>🎉 Scan Berhasil!</h3>
+                        <span class="success-icon">🎉</span>
+                        <h3 style="font-weight: 700; font-size: 18px;">Scan Berhasil!</h3>
                         <span class="student-name">${data.nama}</span>
-                        <p>Telah berhasil dicatat di database.</p>
+                        <p style="font-size: 14px; opacity: 0.9;">Data log kehadiran anak telah sukses dimasukkan ke sistem.</p>
                         <button class="btn-next" onclick="restartScanner()">🔄 Scan Berikutnya</button>
                     </div>
                 `;
             } else {
                 elementHasil.innerHTML = `
                     <div class="alert-error">
-                        ❌ <b>Gagal:</b> ${data.message}
-                        <button class="btn-next" style="background:#ef4444;" onclick="restartScanner()">Coba Lagi</button>
+                        <span style="font-size: 40px; display:block; margin-bottom:10px;">❌</span>
+                        <h3 style="font-weight: 700; margin-bottom: 5px;">Gagal Mengenali Kartu</h3>
+                        <p style="font-size: 14px;">${data.message}</p>
+                        <button class="btn-next" style="background:#ef4444; box-shadow: 0 4px 12px rgba(239,68,68,0.25);" onclick="restartScanner()">Coba Lagi</button>
                     </div>
                 `;
             }
@@ -74,19 +243,20 @@
             console.error(error);
             elementHasil.innerHTML = `
                 <div class="alert-error">
-                    ❌ Terjadi kesalahan koneksi ke server.
-                    <button class="btn-next" style="background:#ef4444;" onclick="restartScanner()">Ulangi</button>
+                    <span style="font-size: 40px; display:block; margin-bottom:10px;">⚠️</span>
+                    <h3 style="font-weight: 700; margin-bottom: 5px;">Gangguan Koneksi</h3>
+                    <p style="font-size: 14px;">Gagal terhubung ke server Google Sheets. Cek paket data internet Anda.</p>
+                    <button class="btn-next" style="background:#f59e0b; box-shadow: 0 4px 12px rgba(245,158,11,0.25);" onclick="restartScanner()">Ulangi</button>
                 </div>
             `;
         });
     }
 
-    // Inisialisasi scanner dengan setelan awal bawaan Anda
+    // Inisialisasi scanner dengan setelan awal bawaan Anda yang stabil
     var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
     html5QrcodeScanner.render(onScanSuccess);
 
     function restartScanner() {
-        // Reload halaman untuk merestart sistem kamera secara bersih dan aman
         location.reload();
     }
 </script>
