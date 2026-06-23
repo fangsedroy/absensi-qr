@@ -124,7 +124,7 @@
             box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25) !important;
         }
 
-        /* 👑 KUNCI PERBAIKAN: SEMBUNYIKAN TOMBOL PERTAMA JIKA STATUSNYA DISABLED (SAAT SCANNING) */
+        /* SEMBUNYIKAN TOMBOL PERTAMA JIKA STATUSNYA DISABLED (SAAT AUTOMATIC/MANUAL SCANNING) */
         #reader__dashboard button:nth-child(1):disabled {
             display: none !important;
         }
@@ -252,6 +252,16 @@
 
     let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+    // 👑 LOGIKA OTOMATIS: Klik tombol Start secara mandiri setelah halaman web siap
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const startButton = document.querySelector('#reader__dashboard button:nth-child(1)');
+            if (startButton && !startButton.disabled) {
+                startButton.click();
+            }
+        }, 1000); // Tunggu 1 detik agar library selesai memuat daftar hardware kamera HP
+    });
 </script>
 
 </body>
