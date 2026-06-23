@@ -126,7 +126,7 @@
 
         /* ==================== LOGIKA TAMPILAN INTERAKTIF ==================== */
 
-        /* 1. SAAT AWAL: Tombol Stop (kedua) harus disembunyikan dulu sebelum di-start */
+        /* 1. SAAT AWAL / STOPPED: Tombol Stop (kedua) harus disembunyikan */
         #reader__dashboard button:nth-child(2) {
             display: none !important;
         }
@@ -266,7 +266,18 @@
     let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-    // KODE OTOMATIS SUDAH SAYA HAPUS BIAR GAK NYALA SENDIRI PAS BUKA WEB 👍
+    // 👑 RE-WRITE TEXT GUARD: Memantau perubahan teks agar tombol pertama selalu bertuliskan "START SCANNING"
+    const textObserver = new MutationObserver(() => {
+        const startButton = document.querySelector('#reader__dashboard button:nth-child(1)');
+        if (startButton && startButton.innerText !== "START SCANNING") {
+            startButton.innerText = "START SCANNING";
+        }
+    });
+
+    const targetNode = document.getElementById('reader');
+    if (targetNode) {
+        textObserver.observe(targetNode, { childList: true, subtree: true, characterData: true });
+    }
 </script>
 
 </body>
