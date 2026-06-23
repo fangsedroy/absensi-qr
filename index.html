@@ -1,35 +1,47 @@
+
+   
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Absensi Siswa</title>
+    <title>Scanner Absensi Modern</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f6f9; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        #reader { width: 100%; background: #333; }
-        #status { margin-top: 20px; font-weight: bold; font-size: 1.2em; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .container { background: rgba(255, 255, 255, 0.95); max-width: 480px; width: 100%; padding: 35px 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center; backdrop-filter: blur(10px); }
+        h2 { color: #2d3748; font-size: 24px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .subtitle { color: #718096; font-size: 14px; margin-bottom: 25px; }
+        #reader { width: 100%; border-radius: 16px; overflow: hidden; border: none !important; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+        #reader__dashboard { background: #f7fafc !important; padding: 15px !important; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; }
+        button { background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%); color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(76, 81, 191, 0.3); }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(76, 81, 191, 0.4); }
+        #status { margin-top: 25px; font-size: 16px; font-weight: 600; min-height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px; }
+        .alert { padding: 12px 20px; border-radius: 12px; width: 100%; animation: slideUp 0.4s ease; }
+        .alert-success { background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+        .alert-loading { background-color: #f7fafc; color: #4a5568; }
+        .alert-error { background-color: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>SCAN ABSENSI SISWA</h2>
+    <h2>Presensi QR Code</h2>
+    <p class="subtitle">Arahkan kartu QR siswa ke area kamera scanner</p>
     <div id="reader"></div>
-    <div id="status">Mengaktifkan Kamera...</div>
+    <div id="status"><div class="alert alert-loading">⏳ Mengaktifkan Kamera...</div></div>
 </div>
 
 <script>
-    // ⚠️ GANTI DENGAN URL APPS SCRIPT BARU HASIL LANGKAH 2
+    // ⚠️ GANTI DENGAN URL APPS SCRIPT ANDA YANG BERAKHIRAN /exec
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzfM2U27ZwceKOJUrRC3eEip_4gu7pgv0o9ASkpJn_n0aj5z841a3P8ZCnqzd4hbNSdTA/exec"; 
 
     function onScanSuccess(decodedText, decodedResult) {
-        // Matikan scanner sebentar agar tidak men-scan berulang-ulang dalam satu detik
         html5QrcodeScanner.clear();
-        document.getElementById('status').innerHTML = "⏳ Memproses data, mohon tunggu...";
+        document.getElementById('status').innerHTML = '<div class="alert alert-loading">⏳ Memproses data log absensi...</div>';
 
-        // Kirim data ke Google Sheets
         fetch(WEB_APP_URL, {
             method: "POST",
             mode: "no-cors",
@@ -37,19 +49,27 @@
             headers: { "Content-Type": "text/plain;charset=utf-8" }
         })
         .then(() => {
-            document.getElementById('status').innerHTML = `<span style="color:green;">✅ Berhasil Dikirim! (NIS: ${decodedText})</span><br><br><button onclick="location.reload()">Scan Lagi</button>`;
+            document.getElementById('status').innerHTML = `
+                <div class="alert alert-success">
+                    🎉 <b>Scan Berhasil!</b><br>ID Siswa: ${decodedText} telah dicatat.
+                </div>
+                <button onclick="location.reload()" style="margin-top:15px;">Scan Berikutnya</button>
+            `;
         })
         .catch(error => {
             console.error(error);
-            document.getElementById('status').innerHTML = '<span style="color:red;">❌ Terjadi kesalahan jaringan.</span><br><br><button onclick="location.reload()">Coba Lagi</button>';
+            document.getElementById('status').innerHTML = `
+                <div class="alert alert-error">
+                    ❌ <b>Gagal terhubung ke server.</b> Periksa jaringan Anda.
+                </div>
+                <button onclick="location.reload()" style="margin-top:15px;">Coba Lagi</button>
+            `;
         });
     }
 
-    function onScanFailure(error) {
-        // Abaikan kegagalan frame kamera biasa
-    }
+    function onScanFailure(error) {}
 
-    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 </script>
 
