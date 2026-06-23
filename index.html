@@ -94,7 +94,7 @@
             padding-top: 5px !important;
         }
         
-        /* DESAIN GAYA UTAMA SEMUA TOMBOL DI DASHBOARD */
+        /* DESAIN GAYA UTAMA SEMUA TOMBOL DI DASHBOARD (Normal & Stabil) */
         #reader__dashboard button { 
             display: block !important;
             width: 100% !important;
@@ -112,35 +112,16 @@
             letter-spacing: 0.5px;
         }
 
-        /* Tombol Pertama (START) - Default Berwarna Biru */
+        /* Mengatur warna dinamis tombol berdasarkan urutan asli html5-qrcode */
         #reader__dashboard button:nth-child(1) {
             background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; 
             box-shadow: 0 4px 12px rgba(76, 81, 191, 0.25) !important;
         }
 
-        /* Tombol Kedua (STOP) - Default Berwarna Merah */
         #reader__dashboard button:nth-child(2) {
             background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important; 
             box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25) !important;
         }
-
-        /* ==================== LOGIKA TAMPILAN INTERAKTIF ==================== */
-
-        /* 1. SAAT AWAL / STOPPED: Tombol Stop (kedua) harus disembunyikan */
-        #reader__dashboard button:nth-child(2) {
-            display: none !important;
-        }
-
-        /* 2. SAAT SCANNING: Begitu tombol pertama (Start) berstatus disabled, hilangkan dia! */
-        #reader__dashboard button:nth-child(1):disabled {
-            display: none !important;
-        }
-
-        /* 3. SAAT SCANNING: Dan di saat yang sama, munculkan tombol Stop (kedua) ke layar */
-        #reader__dashboard button:nth-child(1):disabled + button {
-            display: block !important;
-        }
-        /* ==================================================================== */
         
         #reader__dashboard button:hover { 
             transform: translateY(-1px) !important; 
@@ -224,7 +205,7 @@
     <div id="reader"></div>
 
     <div id="status">
-        <div class="alert alert-loading">⏳ Menunggu Pemindaian Dimulai...</div>
+        <div class="alert alert-loading">⏳ Menunggu Pemindaian...</div>
     </div>
 </div>
 
@@ -263,21 +244,9 @@
 
     function onScanFailure(error) {}
 
+    // Inisialisasi murni standar library bawaan tanpa modifikasi script pemantau
     let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-
-    // 👑 RE-WRITE TEXT GUARD: Memantau perubahan teks agar tombol pertama selalu bertuliskan "START SCANNING"
-    const textObserver = new MutationObserver(() => {
-        const startButton = document.querySelector('#reader__dashboard button:nth-child(1)');
-        if (startButton && startButton.innerText !== "START SCANNING") {
-            startButton.innerText = "START SCANNING";
-        }
-    });
-
-    const targetNode = document.getElementById('reader');
-    if (targetNode) {
-        textObserver.observe(targetNode, { childList: true, subtree: true, characterData: true });
-    }
 </script>
 
 </body>
