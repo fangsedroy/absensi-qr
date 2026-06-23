@@ -73,7 +73,7 @@
                 <div class="alert alert-success">
                     🎉 <b>Scan Berhasil!</b><br>ID Siswa: ${decodedText} telah dicatat.
                 </div>
-                <button onclick="location.reload()">Scan Berikutnya</button>
+                <button onclick="location.reload()" class="btn-next">🔄 Scan Berikutnya</button>
             `;
         })
         .catch(error => {
@@ -82,7 +82,7 @@
                 <div class="alert alert-error">
                     ❌ <b>Gagal terhubung ke server.</b> Periksa jaringan Anda.
                 </div>
-                <button onclick="location.reload()">Coba Lagi</button>
+                <button onclick="location.reload()" class="btn-next">Coba Lagi</button>
             `;
         });
     }
