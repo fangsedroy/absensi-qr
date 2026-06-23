@@ -3,251 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Absensi Modern</title>
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <title>Monitoring Absensi Siswa - Orang Tua</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         
         body { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
             min-height: 100vh; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            padding: 15px; 
-        }
-        
-        .container { 
-            background: rgba(255, 255, 255, 0.95); 
-            max-width: 480px; 
-            width: 100%; 
-            padding: 30px 20px; 
-            border-radius: 24px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
-            text-align: center; 
-            backdrop-filter: blur(10px); 
-        }
-        
-        h2 { 
-            color: #2d3748; 
-            font-size: 24px; 
-            font-weight: 700; 
-            margin-bottom: 8px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-        }
-        
-        .subtitle { 
-            color: #718096; 
-            font-size: 14px; 
-            margin-bottom: 25px; 
-        }
-        
-        /* Box Area Kamera */
-        #reader { 
-            width: 100%; 
-            border-radius: 16px; 
-            overflow: hidden; 
-            border: none !important; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-        }
-        
-        /* Panel Menu Kontrol di Bawah Kamera */
-        #reader__dashboard { 
-            background: #f8fafc !important; 
-            padding: 30px 20px !important; 
-            border-bottom-left-radius: 16px; 
-            border-bottom-right-radius: 16px; 
-            border-top: 1px solid #e2e8f0; 
-        }
-        
-        /* Area Teks & Dropdown Pilihan Kamera */
-        #reader__dashboard_section_csr { 
-            display: block !important; 
-            margin-bottom: 25px !important; 
-            font-weight: 600; 
-            color: #4a5568; 
-            font-size: 14px; 
-        }
-        
-        /* Mengatur Gaya Dropdown Kamera */
-        #reader__dashboard_section_csr select { 
-            padding: 12px 15px !important; 
-            border-radius: 12px !important; 
-            border: 2px solid #cbd5e0 !important; 
-            background-color: white !important; 
-            font-size: 14px !important; 
-            color: #4a5568 !important; 
-            outline: none !important; 
-            width: 100% !important; 
-            max-width: 300px !important; 
-            display: block !important; 
-            margin: 12px auto 0 auto !important; 
-            text-align-last: center; 
-            font-weight: 600; 
+            padding: 20px;
         }
 
-        /* Box Penampung Tombol Bawaan Library */
-        #reader__dashboard_section_csr + div {
-            display: block !important; 
-            margin-top: 25px !important; 
-            padding-top: 5px !important;
+        .container { 
+            background: #ffffff; 
+            max-width: 440px; 
+            width: 100%; 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); 
+            text-align: center;
+            transition: all 0.3s ease;
         }
-        
-        /* DESAIN GAYA UTAMA SEMUA TOMBOL DI DASHBOARD (Normal & Stabil) */
-        #reader__dashboard button { 
-            display: block !important;
-            width: 100% !important;
-            max-width: 280px !important;
-            color: white !important; 
-            border: none !important; 
-            padding: 14px 20px !important; 
-            font-size: 14px !important; 
-            font-weight: 700 !important; 
-            border-radius: 12px !important; 
-            cursor: pointer !important; 
-            transition: all 0.2s ease !important; 
-            margin: 12px auto !important; 
-            text-transform: uppercase;
+
+        .header-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        h2 { 
+            color: #1a2a6c; 
+            font-size: 24px; 
+            font-weight: 700; 
+            margin-bottom: 10px; 
             letter-spacing: 0.5px;
         }
 
-        /* Mengatur warna dinamis tombol berdasarkan urutan asli html5-qrcode */
-        #reader__dashboard button:nth-child(1) {
-            background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; 
-            box-shadow: 0 4px 12px rgba(76, 81, 191, 0.25) !important;
+        .subtitle { 
+            color: #5c6b73; 
+            font-size: 14px; 
+            margin-bottom: 30px; 
+            line-height: 1.5; 
+        }
+        
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
         }
 
-        #reader__dashboard button:nth-child(2) {
-            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important; 
-            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25) !important;
-        }
-        
-        #reader__dashboard button:hover { 
-            transform: translateY(-1px) !important; 
-            box-shadow: 0 6px 14px rgba(0,0,0,0.15) !important; 
-        }
-        
-        /* Area Link Unggah Berkas File Gambar */
-        #reader__dashboard_section_swap { 
-            margin-top: 25px !important; 
-            display: block !important; 
-        }
-
-        #reader__dashboard_section_swap a {
-            color: #4c51bf !important;
-            font-size: 14px !important;
-            font-weight: 600 !important;
-            text-decoration: none !important;
-            border-bottom: 2px dashed #667eea;
-            padding-bottom: 2px;
-            transition: color 0.2s ease;
-        }
-        
-        #reader__dashboard_section_swap a:hover {
-            color: #764ba2 !important;
+        input { 
+            width: 100%; 
+            padding: 16px 20px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 16px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            color: #2d3748; 
+            outline: none; 
+            transition: all 0.3s ease; 
+            text-transform: uppercase; 
+            text-align: center;
+            background-color: #f8fafc;
         }
 
-        /* Area Status Loading dan Sukses */
-        #status { 
-            margin-top: 25px; 
-            min-height: 50px; 
+        input:focus { 
+            border-color: #2a5298; 
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.15); 
         }
-        
-        .alert { 
-            padding: 14px 20px; 
-            border-radius: 14px; 
-            font-size: 15px;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            animation: slideUp 0.4s ease; 
-        }
-        
-        .alert-success { background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
-        .alert-loading { background-color: #f7fafc; color: #4a5568; }
-        .alert-error { background-color: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
 
-        /* Tombol Sukses Akses Scan Berikutnya */
-        .btn-success-action {
-            background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%);
-            color: white;
-            border: none;
-            padding: 14px 35px;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 14px;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(76, 81, 191, 0.35);
-            margin-top: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
+        input::placeholder { 
+            color: #94a3b8; 
+            text-transform: none; 
+            font-weight: 400; 
         }
         
-        .btn-success-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(76, 81, 191, 0.45);
+        button { 
+            width: 100%; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            color: white; 
+            border: none; 
+            padding: 16px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            border-radius: 16px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3); 
+        }
+
+        button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4); 
+        }
+
+        button:active {
+            transform: translateY(0);
         }
         
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
+        #hasil { 
+            margin-top: 30px; 
+            min-height: 60px; 
+        }
+
+        .card { 
+            background: #ffffff; 
+            border-radius: 20px; 
+            padding: 22px; 
+            border: 1px solid #e2e8f0; 
+            text-align: left; 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
+        .card-status { 
+            display: inline-block; 
+            padding: 6px 14px; 
+            border-radius: 30px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            margin-bottom: 14px; 
+            letter-spacing: 0.5px;
+        }
+
+        .status-hadir { 
+            background: #d1fae5; 
+            color: #065f46; 
+        }
+
+        .status-belum { 
+            background: #fee2e2; 
+            color: #991b1b; 
+            text-align: center; 
+            width: 100%; 
+            padding: 20px; 
+            border-radius: 20px;
+            animation: popIn 0.4s ease;
+        }
+
+        .card-name { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: #1e293b; 
+            margin-bottom: 6px; 
+        }
+
+        .card-time { 
+            font-size: 14px; 
+            color: #64748b; 
+            line-height: 1.5;
+        }
+
+        .card-time b {
+            color: #0f172a;
+        }
+        
+        .loading-text { 
+            color: #64748b; 
+            font-size: 15px; 
+            font-weight: 600; 
+            animation: pulse 1.5s infinite; 
+        }
+
+        @keyframes popIn { 
+            from { opacity: 0; transform: scale(0.92); } 
+            to { opacity: 1; transform: scale(1); } 
+        }
+
+        @keyframes pulse { 
+            0%, 100% { opacity: 0.6; } 
+            50% { opacity: 1; } 
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Presensi QR Code</h2>
-    <p class="subtitle">Arahkan kartu QR siswa ke kamera atau unggah berkas gambar</p>
+    <div class="header-icon">🏫</div>
+    <h2>Pantau Presensi</h2>
+    <p class="subtitle">Ketik nama lengkap anak Anda untuk memvalidasi status kehadiran di sekolah hari ini.</p>
     
-    <div id="reader"></div>
-
-    <div id="status">
-        <div class="alert alert-loading">⏳ Menunggu Pemindaian...</div>
+    <div class="input-wrapper">
+        <input type="text" id="namaInput" placeholder="Contoh: AHMED FAUZI">
     </div>
+    <button onclick="cekAbsen()">Periksa Kehadiran</button>
+    
+    <div id="hasil"></div>
 </div>
 
 <script>
-    // ⚠️ PASTEKAN URL WEB APP EXEC SCRIPT KAMU DI SINI
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzfM2U27ZwceKOJUrRC3eEip_4gu7pgv0o9ASkpJn_n0aj5z841a3P8ZCnqzd4hbNSdTA/exec"; 
+    // ⚠️ PASTIKAN MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyMWpvcU8HLBGWieswM9hjXWYjYhbDELRtOWtjGnKmhn1ZHO10QcMenpw-hOXY5Wrme1A/exec"; 
 
-    function onScanSuccess(decodedText, decodedResult) {
-        html5QrcodeScanner.clear();
-        document.getElementById('status').innerHTML = '<div class="alert alert-loading">⏳ Memproses data log absensi...</div>';
-
-        fetch(WEB_APP_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify({ nis: decodedText }),
-            headers: { "Content-Type": "text/plain;charset=utf-8" }
-        })
-        .then(() => {
-            document.getElementById('status').innerHTML = `
-                <div class="alert alert-success">
-                    🎉 <b>Scan Berhasil!</b><br>ID Siswa: ${decodedText} telah dicatat.
-                </div>
-                <button class="btn-success-action" onclick="location.reload()">🔄 Scan Berikutnya</button>
-            `;
+    function cekAbsen() {
+        var namaSiswa = document.getElementById('namaInput').value.trim();
+        if(!namaSiswa) { alert("Silakan ketik nama lengkap anak terlebih dahulu."); return; }
+        
+        document.getElementById('hasil').innerHTML = "<p class='loading-text'>🔍 Mencari data di database sekolah...</p>";
+        
+        fetch(`${WEB_APP_URL}?nama=${encodeURIComponent(namaSiswa)}`)
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "HADIR") {
+                document.getElementById('hasil').innerHTML = `
+                    <div class="card">
+                        <span class="card-status status-hadir">✓ SUDAH HADIR</span>
+                        <div class="card-name">${data.nama}</div>
+                        <div class="card-time">Telah melakukan scan masuk pada pukul:<br><b>${data.jam}</b></div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('hasil').innerHTML = `
+                    <div class="card status-belum">
+                        🛑 <b>Siswa Belum Melakukan Scan</b><br>
+                        <p style="font-size:13px; font-weight:400; margin-top:5px; opacity:0.8;">Data presensi hari ini belum terdeteksi di sistem.</p>
+                    </div>
+                `;
+            }
         })
         .catch(error => {
-            console.error(error);
-            document.getElementById('status').innerHTML = `
-                <div class="alert alert-error">
-                    ❌ <b>Gagal terhubung ke server.</b> Periksa jaringan Anda.
-                </div>
-                <button class="btn-success-action" onclick="location.reload()">🔄 Coba Lagi</button>
-            `;
+            document.getElementById('hasil').innerHTML = "<p style='color:#ef4444; font-size:14px; font-weight:600;'>❌ Koneksi gagal. Mohon coba beberapa saat lagi.</p>";
         });
     }
-
-    function onScanFailure(error) {}
-
-    // Inisialisasi murni standar library bawaan tanpa modifikasi script pemantau
-    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 </script>
-
 </body>
 </html>
