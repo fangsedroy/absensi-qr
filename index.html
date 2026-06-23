@@ -12,24 +12,19 @@
         h2 { color: #2d3748; font-size: 24px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         .subtitle { color: #718096; font-size: 14px; margin-bottom: 25px; }
         
-        /* Merapikan kontainer Scanner */
         #reader { width: 100%; border-radius: 16px; overflow: hidden; border: none !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         
-        /* MODIFIKASI POSISI & TAMPILAN PILIHAN KAMERA UNTUK MOBILE */
+        /* DESAIN NAVIGASI PILIHAN KAMERA MOBILE */
         #reader__dashboard { background: #f8fafc !important; padding: 20px 15px !important; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border-top: 1px solid #e2e8f0; }
-        
-        /* Merapikan teks "Select Camera" dan Dropdown-nya */
         #reader__dashboard_section_csr { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 15px; font-weight: 600; color: #4a5568; font-size: 14px; }
         
-        /* Mempercantik elemen Select / Dropdown Kamera */
-        #reader__dashboard_section_csr select { padding: 10px 15px; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; font-size: 14px; color: #4a5568; outline: none; width: 100%; max-width: 280px; transition: all 0.3s ease; text-align-last: center; }
-        #reader__dashboard_section_csr select:focus { border-color: #667eea; }
+        #reader__dashboard_section_csr select { padding: 12px 15px; border-radius: 12px; border: 2px solid #cbd5e0; background-color: white; font-size: 14px; color: #4a5568; outline: none; width: 100%; max-width: 280px; transition: all 0.3s ease; text-align-last: center; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        #reader__dashboard_section_csr select:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2); }
 
-        /* Mendesain ulang tombol bawaan library (Start/Stop Scanning) */
         #reader__dashboard button { background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%) !important; color: white !important; border: none !important; padding: 12px 28px !important; font-size: 14px !important; font-weight: 600 !important; border-radius: 12px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 12px rgba(76, 81, 191, 0.3) !important; margin: 5px auto !important; display: inline-block; }
         #reader__dashboard button:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(76, 81, 191, 0.4); }
         
-        /* Tombol stop dibuat berjarak manis */
+        /* Tombol stop dirancang tegas */
         #reader__dashboard_section_csr + div button { background: linear-gradient(135deg, #e53e3e 0%, #e53e3e 100%) !important; box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3) !important; }
 
         #status { margin-top: 25px; font-size: 16px; font-weight: 600; min-height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px; }
@@ -84,8 +79,29 @@
 
     function onScanFailure(error) {}
 
+    // Inisialisasi scanner awal
     let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+    // TRIK FIX: Memantau perubahan dropdown kamera di HP secara real-time
+    setTimeout(() => {
+        const selectSelect = document.querySelector("#reader__dashboard_section_csr select");
+        if (selectSelect) {
+            selectSelect.addEventListener("change", function() {
+                // Ambil tombol stop bawaan sistem, lalu klik otomatis untuk memutus aliran kamera lama
+                const stopButton = document.querySelector("#reader__dashboard_section_csr + div button");
+                if (stopButton && stopButton.innerText.toLowerCase().includes("stop")) {
+                    stopButton.click();
+                    
+                    // Berikan jeda 300ms agar browser melepas kunci kamera lama, lalu nyalakan kamera baru
+                    setTimeout(() => {
+                        const startButton = document.querySelector("#reader__dashboard button");
+                        if (startButton) startButton.click();
+                    }, 300);
+                }
+            });
+        }
+    }, 2000); // Menunggu komponen library selesai memuat di layar
 </script>
 
 </body>
