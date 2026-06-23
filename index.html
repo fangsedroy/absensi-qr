@@ -3,38 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presensi QR Code - Kamera Cepat</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" integrity="sha512-r6rDA7W6ZeQXYmy8sK58Sg9VwRTclfQT4JvzS1G8itArFQf796cZ5lncMvPhnjuHIIeXw8U4r9sD6fC4DEhhJw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    
+    <title>Presensi QR Code</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: #f1f5f9; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .card { background: white; max-width: 500px; width: 100%; padding: 30px 24px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; }
-        h2 { color: #1e293b; font-size: 22px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .subtitle { color: #64748b; font-size: 14px; margin-bottom: 25px; }
-        
-        /* Area Scanner Kamera */
-        #reader { width: 100%; border-radius: 16px; overflow: hidden; border: none !important; background: #f8fafc; }
-        #reader__dashboard { padding: 15px !important; }
-        button { background: #3b82f6 !important; color: white !important; border: none !important; padding: 12px 24px !important; font-size: 14px !important; font-weight: 600 !important; border-radius: 12px !important; cursor: pointer !important; transition: all 0.2s !important; }
-        button:hover { background: #2563eb !important; }
-        
-        /* Box Status Notifikasi */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .container { background: white; max-width: 500px; width: 100%; padding: 30px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+        h2 { color: #333; margin-bottom: 5px; font-size: 24px; }
+        .subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #ddd !important; }
         .result-box { margin-top: 20px; display: none; }
-        .alert { padding: 20px; border-radius: 16px; font-size: 16px; line-height: 1.5; }
-        .alert-loading { background: #f8fafc; color: #475569; border: 1px dashed #cbd5e1; font-weight: 600; }
-        .alert-success { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-        .alert-error { background: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; }
-        .student-name { font-size: 22px; font-weight: 800; margin: 10px 0; color: #0f172a; display: block; }
-        .btn-reload { margin-top: 15px; width: 100%; background: #10b981 !important; padding: 14px !important; font-size: 16px !important; }
-        .btn-reload:hover { background: #059669 !important; }
+        .alert-success { padding: 20px; border-radius: 12px; background-color: #e0f2fe; color: #0369a1; text-align: center; }
+        .student-name { font-size: 20px; font-weight: bold; color: #0f172a; margin: 10px 0; display: block; }
+        .btn-next { margin-top: 15px; padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-next:hover { background: #2563eb; }
+        .alert-error { padding: 15px; background-color: #fee2e2; color: #991b1b; text-align: center; border-radius: 12px; }
     </style>
 </head>
 <body>
 
-<div class="card">
+<div class="container">
     <h2>PRESENSI QR CODE</h2>
-    <p class="subtitle">Arahkan kartu QR siswa ke kamera depan perangkat Anda</p>
+    <p class="subtitle">Arahkan kartu QR siswa ke kamera atau unggah berkas gambar</p>
     
     <div id="reader"></div>
     
@@ -42,37 +32,18 @@
 </div>
 
 <script>
-    // ⚠️ GANTI DENGAN URL WEB APP EXEC DARI APPS SCRIPT ANDA
+    // ⚠️ MASUKKAN URL WEB APP EXEC APPS SCRIPT ANDA DI SINI
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyMWpvcU8HLBGWieswM9hjXWYjYhbDELRtOWtjGnKmhn1ZHO10QcMenpw-hOXY5Wrme1A/exec"; 
 
-    let html5QrcodeScanner;
-
-    function inisialisasiScanner() {
-        // Pengaturan config dioptimalkan untuk performa scan super cepat (fps tinggi)
-        const config = { 
-            fps: 20,                  // Mempercepat pembacaan frame per detik
-            qrbox: { width: 250, height: 250 }, // Memfokuskan area baca sensor kamera
-            rememberLastUsedCamera: true,
-            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] // Paksa hanya buka opsi kamera utama
-        };
-
-        html5QrcodeScanner = new Html5QrcodeScanner("reader", config, /* verbose= */ false);
-        html5QrcodeScanner.render(onScanSuccess, onScanError);
-    }
-
     function onScanSuccess(decodedText, decodedResult) {
-        // 1. Matikan scanner seketika agar tidak mengirim request berkali-kali (spam data)
+        // Matikan scanner agar tidak mengirim data berulang-ulang
         html5QrcodeScanner.clear();
         
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.style.display = "block";
-        resultContainer.innerHTML = `
-            <div class="alert alert-loading">
-                ⏳ Menghubungkan ke server...<br>Sedang mencatat data kehadiran NIS: ${decodedText}
-            </div>
-        `;
+        var elementHasil = document.getElementById('resultContainer');
+        elementHasil.style.display = "block";
+        elementHasil.innerHTML = `<div style="color:#666;">⏳ Mencatat kehadiran...</div>`;
 
-        // 2. Kirim data NIS ke Google Apps Script
+        // Kirim NIS ke Google Apps Script
         fetch(WEB_APP_URL, {
             method: "POST",
             body: JSON.stringify({ nis: decodedText }),
@@ -81,48 +52,43 @@
         .then(response => response.json())
         .then(data => {
             if (data.result === "success") {
-                // 3. 🌟 Sukses menampilkan nama siswa secara presisi dari database
-                resultContainer.innerHTML = `
-                    <div class="alert alert-success">
-                        🎉 <b>Scan Berhasil!</b>
+                // Tampilkan nama siswa hasil respon server
+                elementHasil.innerHTML = `
+                    <div class="alert-success">
+                        <h3>🎉 Scan Berhasil!</h3>
                         <span class="student-name">${data.nama}</span>
-                        <p>Kehadiran telah berhasil disimpan ke database.</p>
-                        <button class="btn-reload" onclick="resetScanner()">✓ Scan Berikutnya</button>
+                        <p>Telah berhasil dicatat di database.</p>
+                        <button class="btn-next" onclick="restartScanner()">🔄 Scan Berikutnya</button>
                     </div>
                 `;
             } else {
-                resultContainer.innerHTML = `
-                    <div class="alert alert-error">
-                        ❌ <b>Gagal Mencatat!</b><br>${data.message}
-                        <button class="btn-reload" style="background:#ef4444 !important;" onclick="resetScanner()">Coba Lagi</button>
+                elementHasil.innerHTML = `
+                    <div class="alert-error">
+                        ❌ <b>Gagal:</b> ${data.message}
+                        <button class="btn-next" style="background:#ef4444;" onclick="restartScanner()">Coba Lagi</button>
                     </div>
                 `;
             }
         })
         .catch(error => {
             console.error(error);
-            resultContainer.innerHTML = `
-                <div class="alert alert-error">
-                    ⚠️ <b>Gangguan Jaringan:</b> Gagal terhubung ke Google Sheets.<br>Pastikan internet lancar.
-                    <button class="btn-reload" style="background:#ef4444 !important;" onclick="resetScanner()">Muat Ulang Kamera</button>
+            elementHasil.innerHTML = `
+                <div class="alert-error">
+                    ❌ Terjadi kesalahan koneksi ke server.
+                    <button class="btn-next" style="background:#ef4444;" onclick="restartScanner()">Ulangi</button>
                 </div>
             `;
         });
     }
 
-    function onScanError(errorMessage) {
-        // Diabaikan saja untuk menjaga performa konsol browser tetap ringan saat mencari kode QR
-    }
+    // Inisialisasi scanner dengan setelan awal bawaan Anda
+    var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess);
 
-    function resetScanner() {
-        document.getElementById('resultContainer').style.display = "none";
-        document.getElementById('resultContainer').innerHTML = "";
-        // Jalankan ulang kamera tanpa reload seluruh dokumen web
-        inisialisasiScanner(); 
+    function restartScanner() {
+        // Reload halaman untuk merestart sistem kamera secara bersih dan aman
+        location.reload();
     }
-
-    // Jalankan sistem pembaca saat halaman web dimuat sempurna
-    window.addEventListener('DOMContentLoaded', inisialisasiScanner);
 </script>
 
 </body>
