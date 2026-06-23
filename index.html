@@ -261,11 +261,7 @@ function restartScanner() {
     location.reload(); // Cara paling aman dan bersih untuk merestart library html5-qrcode
 }
 
-    function onScanFailure(error) {}
-
-    // Inisialisasi murni standar library bawaan tanpa modifikasi script pemantau
-    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: {width: 250, height: 250} }, false);
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+   
 </script>
 
 </body>
