@@ -3,241 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Absensi Siswa - Orang Tua</title>
+    <title>Pantau Presensi Siswa</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); 
             min-height: 100vh; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            padding: 20px;
+            padding: 20px; 
         }
-
+        
         .container { 
             background: #ffffff; 
-            max-width: 440px; 
+            max-width: 450px; 
             width: 100%; 
             padding: 40px 30px; 
-            border-radius: 24px; 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); 
-            text-align: center;
-            transition: all 0.3s ease;
+            border-radius: 30px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25); 
+            text-align: center; 
         }
 
-        .header-icon {
+        .school-icon {
             font-size: 50px;
             margin-bottom: 15px;
             display: inline-block;
         }
-
+        
         h2 { 
-            color: #1a2a6c; 
-            font-size: 24px; 
+            color: #1e3a8a; 
+            font-size: 26px; 
             font-weight: 700; 
-            margin-bottom: 10px; 
-            letter-spacing: 0.5px;
-        }
-
-        .subtitle { 
-            color: #5c6b73; 
-            font-size: 14px; 
-            margin-bottom: 30px; 
-            line-height: 1.5; 
+            margin-bottom: 12px; 
         }
         
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 20px;
+        .subtitle { 
+            color: #64748b; 
+            font-size: 14px; 
+            line-height: 1.6;
+            margin-bottom: 30px; 
         }
 
-        input { 
-            width: 100%; 
-            padding: 16px 20px; 
-            border: 2px solid #e2e8f0; 
-            border-radius: 16px; 
-            font-size: 16px; 
-            font-weight: 600; 
-            color: #2d3748; 
-            outline: none; 
-            transition: all 0.3s ease; 
-            text-transform: uppercase; 
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            font-size: 16px;
+            font-weight: 600;
             text-align: center;
+            color: #334155;
+            outline: none;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
             background-color: #f8fafc;
         }
 
-        input:focus { 
-            border-color: #2a5298; 
+        input[type="text"]:focus {
+            border-color: #3b82f6;
             background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.15); 
-        }
-
-        input::placeholder { 
-            color: #94a3b8; 
-            text-transform: none; 
-            font-weight: 400; 
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
         }
         
-        button { 
-            width: 100%; 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            font-size: 16px; 
-            font-weight: 700; 
-            border-radius: 16px; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3); 
+        .btn-search {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-search:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.3);
         }
 
-        button:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4); 
-        }
-
-        button:active {
+        .btn-search:active {
             transform: translateY(0);
         }
+
+        /* Tampilan Kotak Hasil */
+        #resultBox {
+            margin-top: 30px;
+        }
         
-        #hasil { 
-            margin-top: 30px; 
-            min-height: 60px; 
-        }
-
-        .card { 
-            background: #ffffff; 
-            border-radius: 20px; 
-            padding: 22px; 
-            border: 1px solid #e2e8f0; 
-            text-align: left; 
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
-
-        .card-status { 
-            display: inline-block; 
-            padding: 6px 14px; 
-            border-radius: 30px; 
-            font-size: 12px; 
-            font-weight: 700; 
-            margin-bottom: 14px; 
-            letter-spacing: 0.5px;
-        }
-
-        .status-hadir { 
-            background: #d1fae5; 
-            color: #065f46; 
-        }
-
-        .status-belum { 
-            background: #fee2e2; 
-            color: #991b1b; 
-            text-align: center; 
-            width: 100%; 
-            padding: 20px; 
+        .card-result {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 20px;
-            animation: popIn 0.4s ease;
+            padding: 25px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            text-align: left;
+            animation: slideUp 0.4s ease;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
-        .card-name { 
-            font-size: 20px; 
-            font-weight: 700; 
-            color: #1e293b; 
-            margin-bottom: 6px; 
+        .badge-success {
+            background-color: #dcfce7;
+            color: #166534;
         }
 
-        .card-time { 
-            font-size: 14px; 
-            color: #64748b; 
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .student-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
+            text-transform: lowercase;
+        }
+        
+        .student-name::first-letter {
+            text-transform: uppercase;
+        }
+
+        .student-class {
+            font-size: 15px;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-time {
+            border-top: 1px dashed #e2e8f0;
+            padding-top: 15px;
+            color: #64748b;
+            font-size: 14px;
             line-height: 1.5;
         }
 
-        .card-time b {
+        .info-time b {
             color: #0f172a;
+            font-size: 15px;
         }
         
-        .loading-text { 
-            color: #64748b; 
-            font-size: 15px; 
-            font-weight: 600; 
-            animation: pulse 1.5s infinite; 
+        .alert { 
+            padding: 15px 20px; 
+            border-radius: 16px; 
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            animation: slideUp 0.4s ease; 
         }
-
-        @keyframes popIn { 
-            from { opacity: 0; transform: scale(0.92); } 
-            to { opacity: 1; transform: scale(1); } 
+        
+        .alert-loading { 
+            background-color: #f8fafc; 
+            color: #475569; 
+            border: 1px solid #e2e8f0;
         }
-
-        @keyframes pulse { 
-            0%, 100% { opacity: 0.6; } 
-            50% { opacity: 1; } 
+        
+        .alert-error { 
+            background-color: #fef2f2; 
+            color: #991b1b; 
+            border: 1px solid #fca5a5; 
+            text-align: center;
+        }
+        
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-icon">🏫</div>
+    <span class="school-icon">🏫</span>
     <h2>Pantau Presensi</h2>
     <p class="subtitle">Ketik nama lengkap anak Anda untuk memvalidasi status kehadiran di sekolah hari ini.</p>
     
-    <div class="input-wrapper">
-        <input type="text" id="namaInput" placeholder="Contoh: AHMED FAUZI">
+    <div class="form-group">
+        <input type="text" id="inputNama" placeholder="CONTOH: BUDI SANTOSO" autocomplete="off">
     </div>
-    <button onclick="cekAbsen()">Periksa Kehadiran</button>
     
-    <div id="hasil"></div>
+    <button class="btn-search" onclick="periksaKehadiran()">Periksa Kehadiran</button>
+
+    <div id="resultBox"></div>
 </div>
 
 <script>
-    // ⚠️ PASTIKAN MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+    // ⚠️ PASTEKAN URL WEB APP EXEC APPS SCRIPT BARU KAMU DI SINI
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyMWpvcU8HLBGWieswM9hjXWYjYhbDELRtOWtjGnKmhn1ZHO10QcMenpw-hOXY5Wrme1A/exec"; 
 
-  function periksaKehadiran() {
-  var namaInput = document.getElementById('inputNama').value;
-  var statusBox = document.getElementById('resultBox'); // Elemen kotak hasil bawah
-  
-  // Ganti dengan URL Web App Apps Script hasil deployment terbaru Anda
-  var url = "https://script.google.com/macros/s/AKfycbyMWpvcU8HLBGWieswM9hjXWYjYhbDELRtOWtjGnKmhn1ZHO10QcMenpw-hOXY5Wrme1A/exec?action=checkStatus&nama=" + encodeURIComponent(namaInput);
-  
-  statusBox.innerHTML = "⏳ Mencari data siswa...";
-  
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      if (data.result === "found") {
-        // Tentukan warna badge status
-        var badgeClass = data.status === "SUDAH HADIR" ? "badge-success" : "badge-danger";
+    function periksaKehadiran() {
+        var namaInput = document.getElementById('inputNama').value.trim();
+        var statusBox = document.getElementById('resultBox');
         
-        // 🌟 DI SINI KITA TAMBAHKAN INFO KELAS NYA
-        statusBox.innerHTML = `
-          <div class="card-result">
-            <span class="badge ${badgeClass}">✓ ${data.status}</span>
-            <h3 style="margin-top: 10px; color: #1a202c;">${data.nama}</h3>
-            <p style="color: #4a5568; font-weight: 600; margin-bottom: 8px;">Kelas: ${data.kelas}</p> 
-            <p style="color: #718096; font-size: 14px;">
-              Telah melakukan scan masuk pada pukul:<br>
-              <b style="color: #2d3748; font-size: 16px;">${data.waktu} WIB</b>
-            </p>
-          </div>
-        `;
-      } else {
-        statusBox.innerHTML = `
-          <div class="alert alert-error">
-            ❌ <b>Nama tidak ditemukan.</b> Silakan periksa kembali ejaan nama lengkap anak Anda.
-          </div>
-        `;
-      }
-    })
-    .catch(error => {
-      console.error(error);
-      statusBox.innerHTML = `<div class="alert alert-error">❌ Gagal terhubung ke server.</div>`;
+        if (namaInput === "") {
+            statusBox.innerHTML = `<div class="alert alert-error">⚠️ Silakan masukkan nama anak Anda terlebih dahulu.</div>`;
+            return;
+        }
+        
+        statusBox.innerHTML = `<div class="alert alert-loading">⏳ Mencari data log presensi siswa...</div>`;
+        
+        // Memakai parameter URL murni tanpa memicu proteksi CORS CORS-preflight browser
+        var urlFinal = WEB_APP_URL + "?action=checkStatus&nama=" + encodeURIComponent(namaInput);
+        
+        fetch(urlFinal)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Respon jaringan bermasalah");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.result === "found") {
+                // Konfigurasi visual badge status kehadiran siswa
+                var isHadir = data.status.toUpperCase() === "SUDAH HADIR" || data.status.toUpperCase() === "HADIR";
+                var badgeTxt = isHadir ? "✓ SUDAH HADIR" : "✗ BELUM HADIR";
+                var badgeStyle = isHadir ? "badge-success" : "badge-danger";
+                
+                // 🌟 MENAMPILKAN DATA BESERTA KELAS SISWA SECARA ELEGAN
+                statusBox.innerHTML = `
+                    <div class="card-result">
+                        <span class="badge ${badgeStyle}">${badgeTxt}</span>
+                        <h3 class="student-name">${data.nama}</h3>
+                        <p class="student-class">📁 Kelas: ${data.kelas}</p> 
+                        <div class="info-time">
+                            Telah melakukan scan masuk pada pukul:<br>
+                            <b>${data.waktu} WIB</b>
+                        </div>
+                    </div>
+                `;
+            } else if (data.result === "not_found") {
+                statusBox.innerHTML = `
+                    <div class="alert alert-error">
+                        ❌ <b>Nama tidak ditemukan.</b><br>Periksa kembali ejaan nama lengkap anak Anda.
+                    </div>
+                `;
+            } else {
+                statusBox.innerHTML = `<div class="alert alert-error">❌ Terjadi kesalahan pada konfigurasi server sheet.</div>`;
+            }
+        })
+        .catch(error => {
+            console.error("Fetch Error:", error);
+            statusBox.innerHTML = `
+                <div class="alert alert-error">
+                    ❌ <b>Koneksi gagal.</b><br>Pastikan URL Web App benar dan opsi izin akses diatur ke 'Anyone'.
+                </div>
+            `;
+        });
+    }
+
+    // Mengizinkan pencarian otomatis saat orang tua menekan tombol 'Enter' di keyboard
+    document.getElementById('inputNama').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            periksaKehadiran();
+        }
     });
-}
 </script>
+
 </body>
 </html>
